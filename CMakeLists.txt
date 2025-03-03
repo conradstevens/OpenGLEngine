@@ -5,7 +5,14 @@ project(OpenGLEngine)
 
 
 add_executable(${PROJECT_NAME}
-    main.cpp
+        include/entities/entity.h
+        include/rendering/mesh_resources.h
+        src/main.cpp
+        src/entities/entity.cpp
+        include/rendering/shader.h
+        include/entities/square.h
+        src/entities/square.cpp
+        src/rendering/shader.cpp
 )
 
 # Include
