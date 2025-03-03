@@ -9,29 +9,30 @@
 #define GLFW_INCLUDE_NONE  //  Ensures gl3.h is included rather than gl.h
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
-#include "../rendering/shader.h"
+#include <Eigen/Dense>
+#include "shader.h"
 #include <array>
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
-struct MeshResources {
+struct MeshResource {
     const static GLsizei size_v_dm = size_v;
     const static GLsizei size_b_dm = size_b;
 
     Shader shader{};
-    const std::array<float, size_b> index_buffer{};
-    const std::array<float, size_v/2> x_verts{};
-    const std::array<float, size_v/2> y_verts{};
+    std::array<float, size_b> index_buffer{};
+    Eigen::Matrix<float, size_v / 2, 1> x_vert{};
+    Eigen::Matrix<float, size_v / 2, 1> y_vert{};
 
-    MeshResources() = default;
+    MeshResource() = default;
 
-    MeshResources(Shader shader_,
+    MeshResource(Shader shader_,
         std::array<float, size_b> index_buffer_,
-        std::array<float, size_v/2> x_verts_,
-        std::array<float, size_v/2> y_verts_) :
+        Eigen::Matrix<float, size_v / 2, 1> x_vert_,
+        Eigen::Matrix<float, size_v / 2, 1> y_vert_) :
     shader(std::move(shader_)),
     index_buffer(std::move(index_buffer_)),
-    x_verts(std::move(x_verts_)),
-    y_verts(std::move(y_verts_)){}
+    x_vert(std::move(x_vert_)),
+    y_vert(std::move(y_vert_)){}
 };
 
 #endif //MESH_RESOURCES_H

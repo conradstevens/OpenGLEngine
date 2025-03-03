@@ -13,6 +13,8 @@ add_executable(${PROJECT_NAME}
         include/entities/square.h
         src/entities/square.cpp
         src/rendering/shader.cpp
+        include/rendering/mesh.h
+        src/rendering/mesh.cpp
 )
 
 # Include

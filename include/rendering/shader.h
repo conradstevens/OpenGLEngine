@@ -8,11 +8,12 @@
 class Shader{
     const char* vertex_shader_source{};
     const char* fragment_shader_source{};
-    const int vertex_size{};
-    const int vertex_float_stride{};
-    GLuint program{};
 
 public:
+    GLuint program{};
+    const int vertex_float_stride{};
+    const int vertex_size{};
+
     Shader() = default;
 
     Shader(const char* vertex_shader_source_,

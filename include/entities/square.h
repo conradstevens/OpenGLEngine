@@ -6,12 +6,17 @@
 #define SQUARE_H
 #include "entity.h"
 #include "../rendering/mesh_resources.h"
+#include "rendering/mesh.h"
 
 class Square : public Entity {
-    using ResourceType = MeshResources<8, 6, Square>;
-
 public:
-    [[nodiscard]] const static ResourceType loadRenderingResource();
+    using ResourceType = MeshResource<8, 6, Square>;
+    using MeshType = Mesh<8, 6, Square>;
+    MeshType mesh;
+
+    Square(ResourceType& squareResource);
+
+    [[nodiscard]] const static ResourceType loadMeshResource();
 };
 
 #endif //SQUARE_H

@@ -4,8 +4,13 @@
 
 #include "../include/entities/square.h"
 #include "../include/rendering/mesh_resources.h"
+#include "Eigen/Dense"
 
-const Square::ResourceType Square::loadRenderingResource() {
+Square::Square(ResourceType& squareResource) :
+    mesh(Mesh{squareResource}){
+}
+
+const Square::ResourceType Square::loadMeshResource() {
 
     const char* vertex_shader_source =
         "#version 410 core"
@@ -27,13 +32,13 @@ const Square::ResourceType Square::loadRenderingResource() {
         {0, 1, 2,
          2, 3, 0};
 
-    std::array<float, ResourceType::size_v_dm / 2> x_vert =
+    Eigen::Matrix<float, ResourceType::size_v_dm / 2, 1> x_vert =
         {-0.05f,
           0.05f,
           0.05f,
          -0.05f};
 
-    std::array<float, ResourceType::size_v_dm / 2> y_vert =
+    Eigen::Matrix<float, ResourceType::size_v_dm / 2, 1> y_vert =
         {-0.05f,
          -0.05f,
           0.05f,
