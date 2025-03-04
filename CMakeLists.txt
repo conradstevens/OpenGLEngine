@@ -2,19 +2,22 @@ cmake_minimum_required(VERSION 3.29)
 set(CMAKE_CXX_STANDARD 20)
 
 project(OpenGLEngine)
-
+include_directories(include/)
+include_directories(src/)
 
 add_executable(${PROJECT_NAME}
         include/entities/entity.h
+           src/entities/entity.cpp
+        include/entities/square.h
+            src/entities/square.cpp
+        include/rendering/shader.h
+            src/rendering/shader.cpp
+        include/rendering/mesh.h
+            src/rendering/mesh.cpp
+        include/rendering/glfw_ancillary.h
+            src/rendering/glfw_ancillary.cpp
         include/rendering/mesh_resources.h
         src/main.cpp
-        src/entities/entity.cpp
-        include/rendering/shader.h
-        include/entities/square.h
-        src/entities/square.cpp
-        src/rendering/shader.cpp
-        include/rendering/mesh.h
-        src/rendering/mesh.cpp
 )
 
 # Include

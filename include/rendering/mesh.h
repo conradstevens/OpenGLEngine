@@ -10,24 +10,34 @@
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
 #include <Eigen/Dense>
+#include <algorithm>
 
 #include "shader.h"
 #include "mesh_resources.h"
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
 class Mesh{
-    Shader& shader;
-    std::array<float, size_b>& index_buffer;
     Eigen::Matrix<float, size_v / 2, 1> x_vert{};
     Eigen::Matrix<float, size_v / 2, 1> y_vert{};
-    std::array<std::reference_wrapper<float>, size_v> render_vert;
+    std::array<float*, size_v> vert_ptrs{};  // @note Must be after render_vert must be after x_vert and y_vert
+    std::array<float, size_v> render_vert{};
+    std::array<unsigned int, size_b>& index_buffer;
+
+    GLsizeiptr vertex_size_bytes{};  // @note Must be after render_vert
+    GLsizeiptr index_buffer_size_bytes{};  // @note Must be after index_buffer
+    GLsizei stride_count{};
+    GLsizei vertex_stride{};
 
     GLuint VAO{};
     GLuint VBO{};
     GLuint ibo{};
-
 public:
+    Shader& shader;
+
     explicit Mesh(MeshResource<size_v, size_b, Entity_T>& mesh_res_);
+
+    GLsizei getBufferSize() {return size_b;};
+    GLsizei getVertexSize() {return size_v;};
 
     void bindToGPU();
 
@@ -36,8 +46,12 @@ public:
     void rebindToGPU();
 
 private:
-    template<std::size_t... Is>
-    std::array<std::reference_wrapper<float>, size_v> initRefArray(std::index_sequence<Is...>);
+    std::array<float*, size_v> init_vert_ptrs();
+
+    void dereferenceVertexPointers() {
+        std::transform(vert_ptrs.begin(), vert_ptrs.end(), render_vert.begin(),
+            [](const float* ptr_)->float{return *ptr_;});
+    }
 
 };
 

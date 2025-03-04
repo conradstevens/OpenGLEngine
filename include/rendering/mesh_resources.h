@@ -19,14 +19,14 @@ struct MeshResource {
     const static GLsizei size_b_dm = size_b;
 
     Shader shader{};
-    std::array<float, size_b> index_buffer{};
+    std::array<unsigned int, size_b> index_buffer{};
     Eigen::Matrix<float, size_v / 2, 1> x_vert{};
     Eigen::Matrix<float, size_v / 2, 1> y_vert{};
 
     MeshResource() = default;
 
     MeshResource(Shader shader_,
-        std::array<float, size_b> index_buffer_,
+        std::array<unsigned int, size_b> index_buffer_,
         Eigen::Matrix<float, size_v / 2, 1> x_vert_,
         Eigen::Matrix<float, size_v / 2, 1> y_vert_) :
     shader(std::move(shader_)),

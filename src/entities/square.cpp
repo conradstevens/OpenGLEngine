@@ -13,7 +13,7 @@ Square::Square(ResourceType& squareResource) :
 const Square::ResourceType Square::loadMeshResource() {
 
     const char* vertex_shader_source =
-        "#version 410 core"
+        "#version 410 core\n"
         "layout (location = 0) in vec3 aPos;\n"
         "void main()\n"
         "{\n"
@@ -28,7 +28,7 @@ const Square::ResourceType Square::loadMeshResource() {
         "   FragColor = vec4(0.0f, 0.5f, 1.0f, 1.0f);\n"
         "}\0";
 
-    std::array<float, ResourceType::size_b_dm> index_buffer =
+    std::array<unsigned int, ResourceType::size_b_dm> index_buffer =
         {0, 1, 2,
          2, 3, 0};
 
@@ -45,13 +45,12 @@ const Square::ResourceType Square::loadMeshResource() {
           0.05f};
 
     Shader shader{std::move(vertex_shader_source),
-        std::move(fragment_shader_source_static),
-        ResourceType::size_v_dm,
-        2};
+        std::move(fragment_shader_source_static)};
 
     ResourceType resource{std::move(shader),
         std::move(index_buffer),
         std::move(x_vert),
         std::move(y_vert)};
+
     return std::move(resource);
 }

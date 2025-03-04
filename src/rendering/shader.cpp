@@ -12,13 +12,9 @@
 #include "../include/rendering/shader.h"
 
 Shader::Shader(const char* vertex_shader_source_,
-        const char* fragment_shader_source_,
-        const int vertex_size_,
-        const int vertex_float_stride_) :
+        const char* fragment_shader_source_) :
     vertex_shader_source(vertex_shader_source_),
-    fragment_shader_source(fragment_shader_source_),
-    vertex_size(vertex_size_),
-    vertex_float_stride(vertex_float_stride_){}
+    fragment_shader_source(fragment_shader_source_){}
 
 void Shader::initProgram() {
     program = glCreateProgram();
