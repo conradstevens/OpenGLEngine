@@ -12,13 +12,13 @@ add_executable(${PROJECT_NAME}
         include/rendering/shader.h
             src/rendering/shader.cpp
         include/rendering/mesh.h
-            src/rendering/mesh.cpp
         include/rendering/glfw_ancillary.h
             src/rendering/glfw_ancillary.cpp
         include/rendering/mesh_resources.h
         include/rendering/scene.h
-            src/rendering/scene.cpp
         src/main.cpp
+        include/entities/triangle.h
+        src/entities/triangle.cpp
 )
 
 # Include

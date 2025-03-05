@@ -2,12 +2,12 @@
 // Created by Conrad Stevens  on 2025-03-03.
 //
 
-#include "entities/square.h"
+#include "entities/triangle.h"
 #include "rendering/mesh_resources.h"
 #include "Eigen/Dense"
 
 
-const Square::ResourceType Square::loadMeshResource() {
+const Triangle::ResourceType Triangle::loadMeshResource() {
 
     const char* vertex_shader_source =
         "#version 410 core\n"
@@ -22,24 +22,21 @@ const Square::ResourceType Square::loadMeshResource() {
         "out vec4 FragColor;\n"
         "void main()\n"
         "{\n"
-        "   FragColor = vec4(0.0f, 0.5f, 1.0f, 1.0f);\n"
+        "   FragColor = vec4(1.0f, 0.5f, 1.0f, 1.0f);\n"
         "}\0";
 
     std::array<unsigned int, MeshType::size_b_dm> index_buffer =
-        {0, 1, 2,
-         2, 3, 0};
+        {0, 1, 2};
 
     Eigen::Matrix<float, MeshType::size_v_dm / 2, 1> x_vert =
-        {-0.05f,
-          0.05f,
-          0.05f,
-         -0.05f};
+        {0.05,
+        -0.05f,
+        -0.0f};
 
     Eigen::Matrix<float, MeshType::size_v_dm / 2, 1> y_vert =
-        {-0.05f,
-         -0.05f,
-          0.05f,
-          0.05f};
+        {-0.0433f,
+         -0.0433f,
+          0.0433f};
 
     Shader shader{std::move(vertex_shader_source),
         std::move(fragment_shader_source_static)};

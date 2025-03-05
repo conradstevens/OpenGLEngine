@@ -13,11 +13,9 @@
 #include "shader.h"
 #include <array>
 
+
 template<GLsizei size_v, size_t size_b, typename Entity_T>
 struct MeshResource {
-    const static GLsizei size_v_dm = size_v;
-    const static GLsizei size_b_dm = size_b;
-
     Shader shader{};
     std::array<unsigned int, size_b> index_buffer{};
     Eigen::Matrix<float, size_v / 2, 1> x_vert{};

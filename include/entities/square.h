@@ -5,18 +5,18 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 #include "entity.h"
-#include "../rendering/mesh_resources.h"
-#include "rendering/mesh.h"
+
 
 class Square : public Entity {
 public:
-    using ResourceType = MeshResource<8, 6, Square>;
-    using MeshType = Mesh<8, 6, Square>;
+    using MeshType = Mesh<8, 6>;
+    using ResourceType = MeshResource<MeshType::size_v_dm, MeshType::size_b_dm, Square>;
     MeshType mesh;
 
-    Square(ResourceType& squareResource);
+    explicit Square(ResourceType& resource) : mesh(Mesh<MeshType::size_v_dm, MeshType::size_b_dm>{resource}) {}
 
     [[nodiscard]] const static ResourceType loadMeshResource();
 };
+
 
 #endif //SQUARE_H

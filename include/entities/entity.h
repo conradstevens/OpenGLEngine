@@ -11,7 +11,7 @@
 class Entity {
 public:
     Entity() = default;
-    ~Entity() = default;
+    virtual ~Entity() = default;
 };
 
 template <typename T>

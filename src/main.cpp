@@ -6,6 +6,7 @@
 
 #include "rendering/mesh.h"
 #include "entities/square.h"
+#include "entities/triangle.h"
 #include "rendering/mesh_resources.h"
 #include "rendering/glfw_ancillary.h"
 #include "rendering/scene.h"
@@ -17,9 +18,9 @@ int main() {
     if (true) {
         GLFWwindow* window = initWindow();
 
-        Scene<Square> scene{};
+        Scene<Triangle, Square> scene{};
         scene.spawnEntity<Square>();
-
+        scene.spawnEntity<Triangle>();
 
         while (!glfwWindowShouldClose(window))
         {
