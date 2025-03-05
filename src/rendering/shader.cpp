@@ -39,6 +39,7 @@ void Shader::initProgram() {
     }
     glDeleteProgram(vertex_shader);
     glDeleteProgram(fragment_shader);
+    isCompiled = true;
 }
 
 GLuint Shader::compileShader(const GLuint type, const char* source) {

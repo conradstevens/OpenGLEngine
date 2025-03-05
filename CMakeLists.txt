@@ -3,7 +3,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(OpenGLEngine)
 include_directories(include/)
-include_directories(src/)
 
 add_executable(${PROJECT_NAME}
         include/entities/entity.h
@@ -17,6 +16,8 @@ add_executable(${PROJECT_NAME}
         include/rendering/glfw_ancillary.h
             src/rendering/glfw_ancillary.cpp
         include/rendering/mesh_resources.h
+        include/rendering/scene.h
+            src/rendering/scene.cpp
         src/main.cpp
 )
 

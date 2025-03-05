@@ -52,5 +52,5 @@ const Square::ResourceType Square::loadMeshResource() {
         std::move(x_vert),
         std::move(y_vert)};
 
-    return std::move(resource);
+    return resource;
 }

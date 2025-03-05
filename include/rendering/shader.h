@@ -10,6 +10,7 @@ class Shader{
     const char* fragment_shader_source{};
 
 public:
+    bool isCompiled = false;
     GLuint program{};
 
     Shader() = default;

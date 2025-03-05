@@ -9,13 +9,60 @@ Mesh<size_v, size_b, Entity_T>::Mesh(MeshResource<size_v, size_b, Entity_T> &mes
     x_vert(mesh_res_.x_vert),
     y_vert(mesh_res_.y_vert),
     vert_ptrs(init_vert_ptrs()),
-    index_buffer(mesh_res_.index_buffer),
-    vertex_size_bytes(render_vert.size() * sizeof(std::reference_wrapper<float>)),
-    index_buffer_size_bytes(index_buffer.size() * sizeof(unsigned int)),
-    shader(mesh_res_.shader),
-    stride_count(2),
-    vertex_stride(stride_count * sizeof(float)){
+    index_buffer_ptr(&mesh_res_.index_buffer),
+    shader_ptr(&mesh_res_.shader){
 }
+
+template<GLsizei size_v, size_t size_b, typename Entity_T>
+Mesh<size_v, size_b, Entity_T>::Mesh(
+        Eigen::Matrix<float, size_v / 2, 1> x_vert_,
+        Eigen::Matrix<float, size_v / 2, 1> y_vert_,
+        Shader* shader_,
+        std::array<unsigned int, size_b>* index_buffer_) :
+    x_vert(x_vert_),
+    y_vert(y_vert_),
+    vert_ptrs(init_vert_ptrs()),
+    index_buffer_ptr(index_buffer_),
+    shader_ptr(shader_){
+}
+
+template<GLsizei size_v, size_t size_b, typename Entity_T>
+Mesh<size_v, size_b, Entity_T>::Mesh(const Mesh<size_v, size_b, Entity_T> &other) :
+    x_vert(other.x_vert),
+    y_vert(other.y_vert),
+    vert_ptrs(init_vert_ptrs()),
+    index_buffer_ptr(other.index_buffer_ptr),
+    shader_ptr(other.shader_ptr){
+}
+
+template<GLsizei size_v, size_t size_b, typename Entity_T>
+Mesh<size_v, size_b, Entity_T>& Mesh<size_v, size_b, Entity_T>::operator=(const Mesh<size_v, size_b, Entity_T> &other) {
+    if (this != &other) {
+        Mesh<size_v, size_b, Entity_T> newMesh{other.x_vert, other.y_vert, other.shader_ptr, other.index_buffer_ptr};
+        *this = newMesh;
+    }
+    return *this;
+}
+
+template<GLsizei size_v, size_t size_b, typename Entity_T>
+Mesh<size_v, size_b, Entity_T>::Mesh(Mesh<size_v, size_b, Entity_T> &&other) noexcept :
+    x_vert(std::move(other.x_vert)),
+    y_vert(std::move(other.y_vert)),
+    vert_ptrs(init_vert_ptrs()),
+    index_buffer_ptr(other.index_buffer_ptr),
+    shader_ptr(other.shader_ptr){
+}
+
+template<GLsizei size_v, size_t size_b, typename Entity_T>
+Mesh<size_v, size_b, Entity_T>& Mesh<size_v, size_b, Entity_T>::operator=(Mesh<size_v, size_b, Entity_T> &&other) noexcept {
+    if (this != &other) {
+        Mesh<size_v, size_b, Entity_T> newMesh{std::move(other.x_vert), std::move(other.y_vert),
+            other.shader_ptr, other.index_buffer_ptr};
+        *this = newMesh;
+    }
+    return *this;
+}
+
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
 void Mesh<size_v, size_b, Entity_T>::bindToGPU() {
@@ -30,12 +77,12 @@ void Mesh<size_v, size_b, Entity_T>::bindToGPU() {
 
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size_bytes,index_buffer.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size_bytes,index_buffer_ptr->data(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, vertex_stride, (void*)0);
     glEnableVertexAttribArray(0);
 
-    glUseProgram(shader.program);
+    glUseProgram(shader_ptr->program);
 }
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
@@ -47,13 +94,13 @@ void Mesh<size_v, size_b, Entity_T>::rebindMeshToGPU() {
     glBufferData(GL_ARRAY_BUFFER, vertex_size_bytes, render_vert.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size_bytes, index_buffer.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size_bytes, index_buffer_ptr->data(), GL_STATIC_DRAW);
 }
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
 void Mesh<size_v, size_b, Entity_T>::rebindToGPU() {
     rebindMeshToGPU();
-    glUseProgram(shader.program);
+    glUseProgram(shader_ptr->program);
 }
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
@@ -66,8 +113,19 @@ std::array<float*, size_v> Mesh<size_v, size_b, Entity_T>::init_vert_ptrs(){
     return vertex_ptrs_;
 }
 
-#include"../../include/entities/square.h"
-template Mesh<8, 6ul, Square>::Mesh(MeshResource<8, 6ul, Square>& resource);
+#include "entities/entity.h"
+template Mesh<0, 0ul, Entity>::Mesh(const Mesh<0, 0ul, Entity>&);
+template Mesh<0, 0ul, Entity>& Mesh<0, 0ul, Entity>::operator=(const Mesh<0, 0ul, Entity>&);
+template Mesh<0, 0ul, Entity>::Mesh(Mesh<0, 0ul, Entity>&&) noexcept;
+template Mesh<0, 0ul, Entity>& Mesh<0, 0ul, Entity>::operator=(Mesh<0, 0ul, Entity>&&) noexcept;
+// template void Mesh<0, 0ul, Entity>::rebindToGPU();
+
+#include"entities/square.h"
+template Mesh<8, 6ul, Square>::Mesh(const Mesh<8, 6ul, Square>&);
+template Mesh<8, 6ul, Square>::Mesh(MeshResource<8, 6ul, Square>&);
+template Mesh<8, 6ul, Square>& Mesh<8, 6ul, Square>::operator=(const Mesh<8, 6ul, Square>&);
+template Mesh<8, 6ul, Square>::Mesh(Mesh<8, 6ul, Square>&&) noexcept;
+template Mesh<8, 6ul, Square>& Mesh<8, 6ul, Square>::operator=(Mesh<8, 6ul, Square>&&) noexcept;
+
 template void Mesh<8, 6ul, Square>::bindToGPU();
 template void Mesh<8, 6ul, Square>::rebindToGPU();
-// template void Mesh<8, 6ul, Square>::init_vert_ptrs();
