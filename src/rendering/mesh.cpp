@@ -50,15 +50,23 @@ Mesh<size_v, size_b, Entity_T>::Mesh(Mesh<size_v, size_b, Entity_T> &&other) noe
     y_vert(std::move(other.y_vert)),
     vert_ptrs(init_vert_ptrs()),
     index_buffer_ptr(other.index_buffer_ptr),
+    VAO(other.VAO),
+    VBO(other.VBO),
+    ibo(other.ibo),
     shader_ptr(other.shader_ptr){
 }
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
 Mesh<size_v, size_b, Entity_T>& Mesh<size_v, size_b, Entity_T>::operator=(Mesh<size_v, size_b, Entity_T> &&other) noexcept {
     if (this != &other) {
-        Mesh<size_v, size_b, Entity_T> newMesh{std::move(other.x_vert), std::move(other.y_vert),
-            other.shader_ptr, other.index_buffer_ptr};
-        *this = newMesh;
+        x_vert = std::move(other.x_vert);
+        y_vert = std::move(other.y_vert);
+        vert_ptrs = init_vert_ptrs();
+        index_buffer_ptr =other.index_buffer_ptr;
+        VAO = other.VAO;
+        VBO = other.VBO;
+        ibo = other.ibo;
+        shader_ptr = other.shader_ptr;
     }
     return *this;
 }
@@ -95,6 +103,9 @@ void Mesh<size_v, size_b, Entity_T>::rebindMeshToGPU() {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size_bytes, index_buffer_ptr->data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, vertex_stride, (void*)0);
+    glEnableVertexAttribArray(0);
 }
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>

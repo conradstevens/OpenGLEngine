@@ -7,8 +7,7 @@
 template<EntityDerived ... EntityTypes>
 Scene<EntityTypes...>::Scene() :
     static_entity_refs({EntityTypes::loadMeshResource()...}) {
-    // (getEntityResource<EntityTypes>().shader.initProgram(), ...);
-    getEntityResource<EntityTypes...>().shader.initProgram();
+    (std::get<typename EntityTypes::ResourceType>(static_entity_refs).shader.initProgram(), ...);
     entities.reserve(100);  // arbitrary reserve to start
 }
 
