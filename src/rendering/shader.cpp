@@ -12,12 +12,33 @@
 #include <sstream>
 #include <string>
 
-#include "../include/rendering/shader.h"
+#include "rendering/shader.h"
+#include "rendering/translation.h"
 
 Shader::Shader(std::string vertex_shader_source_,
         std::string fragment_shader_source_) :
     vertex_shader_source(std::move(vertex_shader_source_)),
     fragment_shader_source(std::string(fragment_shader_source_)){}
+
+void Shader::set_color(const glm::vec4& color_vec) {
+    int vertexColorLocation = glGetUniformLocation(program, "u_color");
+    glUseProgram(program);
+    glUniform4fv(vertexColorLocation, 1, glm::value_ptr(color_vec));
+    // glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+}
+
+void Shader::set_pose(const Entity& entity) {
+    // Set location
+    glm::mat3 move_matrix = translation::getMoveMatrix(entity);
+    int move_location = glGetUniformLocation(program, "u_move");
+    glUniformMatrix3fv(move_location, 1, GL_FALSE, glm::value_ptr(move_matrix));
+
+    // Set Rotation
+    glm::mat3 rotation_matrix = translation::getRotationMatrix(entity);
+    int rotation_location = glGetUniformLocation(program, "u_rotation");
+    glUniformMatrix3fv(rotation_location, 1, GL_FALSE, glm::value_ptr(rotation_matrix));
+    std::cout << rotation_location << std::endl;
+}
 
 std::string Shader::readShaderFile(const std::string& path) {
     std::ifstream file(path);

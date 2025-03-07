@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(OpenGLEngine)
 include_directories(include/)
+include_directories(.)
 
 add_executable(${PROJECT_NAME}
         include/entities/entity.h
@@ -20,6 +21,7 @@ add_executable(${PROJECT_NAME}
         include/entities/triangle.h
         src/entities/triangle.cpp
         include/physics/pose.h
+        include/rendering/translation.h
 )
 
 # Include

@@ -9,8 +9,10 @@
 
 const Triangle::ResourceType Triangle::loadMeshResource() {
 
-    std::string vertex_shader_source = Shader::readShaderFile("../src/shaders/vertex_shader.shader");
-    std::string fragment_shader_source = Shader::readShaderFile("../src/shaders/fragment_shader_triangle.shader");
+    std::string vertex_shader_source = Shader::readShaderFile(
+        "../src/shaders/vertex_shader_translation_uniform.shader");
+    std::string fragment_shader_source = Shader::readShaderFile(
+        "../src/shaders/fragment_shader_triangle_uniform.shader");
 
     std::array<unsigned int, MeshType::size_b_dm> index_buffer =
         {0, 1, 2};
