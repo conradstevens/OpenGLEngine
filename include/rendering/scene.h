@@ -8,6 +8,9 @@
 #include <vector>
 
 #include "entities/entity.h"
+#include "rendering/glfw_ancillary.h"
+
+using namespace glfw_rendering;
 
 template <EntityDerived... EntityTypes>
 class Scene {
@@ -35,7 +38,6 @@ public:
 
 // Implementation
 
-
 template<EntityDerived ... EntityTypes>
 Scene<EntityTypes...>::Scene() :
     static_entity_refs({EntityTypes::loadMeshResource()...}) {
@@ -55,7 +57,7 @@ template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
 void Scene<EntityTypes...>::spawnEntity() {
     Entity_T entity(getEntityResource<Entity_T>());
-    entity.mesh.bindToGPU();
+    bindMeshToGPU(entity.mesh);
     entities.push_back(std::move(Variant_Entity_Type(std::move(entity))));
 }
 
@@ -72,8 +74,8 @@ template<EntityDerived ... EntityTypes>
 void Scene<EntityTypes...>::render() {
     for (Variant_Entity_Type& variant_entity : entities) {
 
-        std::visit([](auto& variant_entity_) {
-            variant_entity_.mesh.rebindToGPU();
+        std::visit([&](auto& variant_entity_) {
+            rebindToGPU(variant_entity_.mesh);
             glDrawElements(GL_TRIANGLES, variant_entity_.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
             }, variant_entity);
 

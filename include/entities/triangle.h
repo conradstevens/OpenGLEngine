@@ -5,6 +5,7 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 #include "entity.h"
+#include "rendering/mesh.h"
 
 
 class Triangle : public Entity {

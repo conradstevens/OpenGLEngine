@@ -15,6 +15,7 @@
 #include "entities/entity.h"
 #include "rendering/shader.h"
 #include "rendering/mesh_resources.h"
+#include "rendering/glfw_ancillary.h"
 
 template<GLsizei size_v, GLsizei size_b>
 class Mesh{
@@ -54,11 +55,11 @@ public:
     static GLsizei getBufferSize() {return size_b;};
     static GLsizei getVertexSize() {return size_v;};
 
-    void bindToGPU();
-
-    void rebindMeshToGPU();
-
-    void rebindToGPU();
+    // void bindToGPU();
+    //
+    // void rebindMeshToGPU();
+    //
+    // void rebindToGPU();
 
 private:
     std::array<float*, size_v> init_vert_ptrs();
@@ -67,6 +68,15 @@ private:
         std::transform(vert_ptrs.begin(), vert_ptrs.end(), render_vert.begin(),
             [](const float* ptr_)->float{return *ptr_;});
     }
+
+    template<typename MeshType>
+    friend void glfw_rendering::bindMeshToGPU(MeshType& mesh);
+
+    template<typename MeshType>
+    friend void glfw_rendering::rebindMeshToGPU(MeshType& mesh);
+
+    template<typename MeshType>
+    friend void glfw_rendering::rebindToGPU(MeshType& mesh);
 
 };
 
@@ -149,48 +159,6 @@ Mesh<size_v, size_b>& Mesh<size_v, size_b>::operator=(Mesh<size_v, size_b> &&oth
 }
 
 template<GLsizei size_v, GLsizei size_b>
-void Mesh<size_v, size_b>::bindToGPU() {
-    dereferenceVertexPointers();
-
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertex_size_bytes, render_vert.data(), GL_STATIC_DRAW);
-
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size_bytes,index_buffer_ptr->data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, vertex_stride, (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glUseProgram(shader_ptr->program);
-}
-
-template<GLsizei size_v, GLsizei size_b>
-void Mesh<size_v, size_b>::rebindMeshToGPU() {
-    dereferenceVertexPointers();
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertex_size_bytes, render_vert.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size_bytes, index_buffer_ptr->data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, vertex_stride, (void*)0);
-    glEnableVertexAttribArray(0);
-}
-
-template<GLsizei size_v, GLsizei size_b>
-void Mesh<size_v, size_b>::rebindToGPU() {
-    rebindMeshToGPU();
-    glUseProgram(shader_ptr->program);
-}
-
-template<GLsizei size_v, GLsizei size_b>
 std::array<float*, size_v> Mesh<size_v, size_b>::init_vert_ptrs(){
     std::array<float*, size_v> vertex_ptrs_{};
     for (size_t i = 0; i < size_v / 2; ++i) {
@@ -199,5 +167,6 @@ std::array<float*, size_v> Mesh<size_v, size_b>::init_vert_ptrs(){
     }
     return vertex_ptrs_;
 }
+
 
 #endif //MESH_H

@@ -5,6 +5,7 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 #include "entity.h"
+#include "rendering/mesh.h"
 
 
 class Square : public Entity {

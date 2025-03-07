@@ -5,11 +5,12 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 #include <concepts>
-#include "../rendering/mesh_resources.h"
-#include "rendering/mesh.h"
+#include "physics/pose.h"
 
 class Entity {
 public:
+    Pose pose{};
+
     Entity() = default;
     virtual ~Entity() = default;
 };

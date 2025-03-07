@@ -19,6 +19,7 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         include/entities/triangle.h
         src/entities/triangle.cpp
+        include/physics/pose.h
 )
 
 # Include

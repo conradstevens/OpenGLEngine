@@ -8,18 +8,41 @@
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 #include "../include/rendering/shader.h"
 
-Shader::Shader(const char* vertex_shader_source_,
-        const char* fragment_shader_source_) :
-    vertex_shader_source(vertex_shader_source_),
-    fragment_shader_source(fragment_shader_source_){}
+Shader::Shader(std::string vertex_shader_source_,
+        std::string fragment_shader_source_) :
+    vertex_shader_source(std::move(vertex_shader_source_)),
+    fragment_shader_source(std::string(fragment_shader_source_)){}
+
+std::string Shader::readShaderFile(const std::string& path) {
+    std::ifstream file(path);
+
+    if (!file.is_open()) {
+        std::cout << "\033[31mFailed to open file: \033[0m" << "\033[31m" << path << "\033[0m" << std::endl;
+        return "";
+    }
+
+    std::string line;
+    std::stringstream buffer;
+
+    while (std::getline(file, line)) {
+        buffer << line << '\n';
+        // std::cout << line << std::endl;
+    }
+
+    file.close();
+    return buffer.str();
+}
 
 void Shader::initProgram() {
     program = glCreateProgram();
-    GLuint vertex_shader = compileShader(GL_VERTEX_SHADER, vertex_shader_source);
-    GLuint fragment_shader = compileShader(GL_FRAGMENT_SHADER, fragment_shader_source);
+    GLuint vertex_shader = compileShader(GL_VERTEX_SHADER, vertex_shader_source.data());
+    GLuint fragment_shader = compileShader(GL_FRAGMENT_SHADER, fragment_shader_source.data());
 
     glAttachShader(program, vertex_shader);
     glAttachShader(program, fragment_shader);

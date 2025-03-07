@@ -9,21 +9,8 @@
 
 const Square::ResourceType Square::loadMeshResource() {
 
-    const char* vertex_shader_source =
-        "#version 410 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);\n"
-        "}\0";
-
-    const char* fragment_shader_source_static =
-        "#version 410 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "   FragColor = vec4(0.0f, 0.5f, 1.0f, 1.0f);\n"
-        "}\0";
+    std::string vertex_shader_source = Shader::readShaderFile("../src/shaders/vertex_shader.shader");
+    std::string fragment_shader_source = Shader::readShaderFile("../src/shaders/fragment_shader_square.shader");
 
     std::array<unsigned int, MeshType::size_b_dm> index_buffer =
         {0, 1, 2,
@@ -42,7 +29,7 @@ const Square::ResourceType Square::loadMeshResource() {
           0.05f};
 
     Shader shader{std::move(vertex_shader_source),
-        std::move(fragment_shader_source_static)};
+        std::move(fragment_shader_source)};
 
     ResourceType resource{std::move(shader),
         std::move(index_buffer),

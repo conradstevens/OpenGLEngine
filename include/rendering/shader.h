@@ -6,8 +6,8 @@
 #define SHADER_H
 
 class Shader{
-    const char* vertex_shader_source{};
-    const char* fragment_shader_source{};
+    std::string vertex_shader_source{};
+    std::string fragment_shader_source{};
 
 public:
     bool isCompiled = false;
@@ -15,8 +15,10 @@ public:
 
     Shader() = default;
 
-    Shader(const char* vertex_shader_source_,
-        const char* fragment_shader_source_);
+    Shader(std::string vertex_shader_source_,
+           std::string fragment_shader_source_);
+
+    static std::string readShaderFile(const std::string& path);
 
     void initProgram();
 

@@ -4,18 +4,20 @@
 #include <iostream>
 #include <array>
 
+
 #include "rendering/mesh.h"
 #include "entities/square.h"
 #include "entities/triangle.h"
 #include "rendering/mesh_resources.h"
 #include "rendering/glfw_ancillary.h"
 #include "rendering/scene.h"
+#include "rendering/shader.h"
 
 using namespace glfw_rendering;
 
 int main() {
 
-    if (true) {
+    if (false) {
         GLFWwindow* window = initWindow();
 
         Scene<Triangle, Square> scene{};
@@ -47,10 +49,14 @@ int main() {
     } else {
         GLFWwindow* window = initWindow();
 
-        Square::ResourceType squareMeshResource{Square::loadMeshResource()};
-        squareMeshResource.shader.initProgram();
-        Square square{squareMeshResource};
-        square.mesh.bindToGPU();
+        Triangle::ResourceType triangleMeshResource{Triangle::loadMeshResource()};
+        triangleMeshResource.shader.initProgram();
+        Triangle triangle{triangleMeshResource};
+        bindMeshToGPU(triangle.mesh);
+
+        int vertexColorLocation = glGetUniformLocation(triangle.mesh.shader_ptr->program, "u_color");
+        glUseProgram(triangle.mesh.shader_ptr->program);
+        glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f);
 
 
         while (!glfwWindowShouldClose(window))
@@ -60,8 +66,8 @@ int main() {
             glClearError();
 
             // Rendering loop here
-            square.mesh.rebindToGPU();
-            glDrawElements(GL_TRIANGLES, square.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
+            rebindToGPU(triangle.mesh);
+            glDrawElements(GL_TRIANGLES, triangle.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
 
             glCheckError();
 
