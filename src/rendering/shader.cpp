@@ -17,27 +17,51 @@
 
 Shader::Shader(std::string vertex_shader_source_,
         std::string fragment_shader_source_) :
-    vertex_shader_source(std::move(vertex_shader_source_)),
-    fragment_shader_source(std::string(fragment_shader_source_)){}
+    vertex_shader_source(vertex_shader_source_),
+    fragment_shader_source(fragment_shader_source_){}
 
-void Shader::set_color(const glm::vec4& color_vec) {
-    int vertexColorLocation = glGetUniformLocation(program, "u_color");
-    glUseProgram(program);
-    glUniform4fv(vertexColorLocation, 1, glm::value_ptr(color_vec));
-    // glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+Shader::Shader(const Shader &other) :
+    vertex_shader_source(other.vertex_shader_source),
+    fragment_shader_source(other.fragment_shader_source){
+    if (other.isCompiled) initProgram();
 }
 
-void Shader::set_pose(const Entity& entity) {
-    // Set location
-    glm::mat3 move_matrix = translation::getMoveMatrix(entity);
-    int move_location = glGetUniformLocation(program, "u_move");
+Shader& Shader::operator=(const Shader& other) {
+    if (this != &other) {
+        vertex_shader_source = other.vertex_shader_source;
+        fragment_shader_source = other.fragment_shader_source;
+        GLuint program{};
+        if (other.isCompiled) initProgram();
+    }
+    return *this;
+}
+
+Shader::Shader(Shader &&other) noexcept :
+    vertex_shader_source(std::move(other.vertex_shader_source)),
+    fragment_shader_source(std::move(other.fragment_shader_source)){
+    program = other.program;
+}
+
+Shader & Shader::operator&=(Shader &&other) noexcept {
+    if (this != &other) {
+        vertex_shader_source = std::move(other.vertex_shader_source);
+        fragment_shader_source = std::move(other.fragment_shader_source);
+        program = other.program;
+    }
+    return *this;
+}
+
+void Shader::set_color(const glm::vec4& color_vec) {
+    glUseProgram(program);
+    glUniform4f(vertex_color_location, color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
+}
+
+void Shader::set_pose(const Pose& pose) {
+    glm::mat3 move_matrix = translation::getMoveMatrix(pose);
     glUniformMatrix3fv(move_location, 1, GL_FALSE, glm::value_ptr(move_matrix));
 
-    // Set Rotation
-    glm::mat3 rotation_matrix = translation::getRotationMatrix(entity);
-    int rotation_location = glGetUniformLocation(program, "u_rotation");
+    glm::mat3 rotation_matrix = translation::getRotationMatrix(pose);
     glUniformMatrix3fv(rotation_location, 1, GL_FALSE, glm::value_ptr(rotation_matrix));
-    std::cout << rotation_location << std::endl;
 }
 
 std::string Shader::readShaderFile(const std::string& path) {
@@ -83,6 +107,10 @@ void Shader::initProgram() {
     }
     glDeleteProgram(vertex_shader);
     glDeleteProgram(fragment_shader);
+
+    move_location = glGetUniformLocation(program, "u_move");
+    rotation_location = glGetUniformLocation(program, "u_rotation");
+    vertex_color_location = glGetUniformLocation(program, "u_color");
     isCompiled = true;
 }
 

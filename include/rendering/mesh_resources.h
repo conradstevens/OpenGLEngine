@@ -18,19 +18,16 @@ template<GLsizei size_v, size_t size_b, typename Entity_T>
 struct MeshResource {
     Shader shader{};
     std::array<unsigned int, size_b> index_buffer{};
-    Eigen::Matrix<float, size_v / 2, 1> x_vert{};
-    Eigen::Matrix<float, size_v / 2, 1> y_vert{};
+    std::array<float, size_v> vert{};
 
     MeshResource() = default;
 
-    MeshResource(Shader shader_,
-        std::array<unsigned int, size_b> index_buffer_,
-        Eigen::Matrix<float, size_v / 2, 1> x_vert_,
-        Eigen::Matrix<float, size_v / 2, 1> y_vert_) :
-    shader(std::move(shader_)),
-    index_buffer(std::move(index_buffer_)),
-    x_vert(std::move(x_vert_)),
-    y_vert(std::move(y_vert_)){}
+    MeshResource(const Shader& shader_,
+                 const std::array<unsigned int, size_b>& index_buffer_,
+                 const std::array<float, size_v>& vert_) :
+    shader(shader_),
+    index_buffer(index_buffer_),
+    vert(vert_){}
 };
 
 #endif //MESH_RESOURCES_H

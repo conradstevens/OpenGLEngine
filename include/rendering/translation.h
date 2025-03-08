@@ -10,25 +10,25 @@
 #include <lib/include/glm/gtc/matrix_transform.hpp>
 #include <lib/include/glm/gtc/type_ptr.hpp>
 
-#include "../entities/entity.h"
+#include "../physics/pose.h"
 
 
 namespace translation {
-    inline glm::mat3 getMoveMatrix(const Entity& entity) {
+    inline glm::mat3 getMoveMatrix(const Pose& pose) {
 
         glm::mat3 move_matrix(
-            1.0f, 0.0f,entity.pose.x,
-            0.0f, 1.0f, entity.pose.y,
+            1.0f, 0.0f,pose.x,
+            0.0f, 1.0f, pose.y,
             0.0f, 0.0f, 1.0f);
 
         return move_matrix;
     }
 
-    inline glm::mat3 getRotationMatrix(const Entity& entity) {
+    inline glm::mat3 getRotationMatrix(const Pose& pose) {
         glm::mat3 rotation_matrix(
-            cos(entity.pose.r), -sin(entity.pose.r), 0,
-            sin(entity.pose.r), cos(entity.pose.r), 0,
-            0,                0,                    1);
+            cos(pose.r), -sin(pose.r),0,
+            sin(pose.r), cos(pose.r), 0,
+            0,           0,           1);
 
         return rotation_matrix;
     }

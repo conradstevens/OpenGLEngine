@@ -14,11 +14,9 @@ namespace glfw_rendering {
     inline void glCheckError();
 
     template<typename MeshType>
+    void initMesh(MeshType& mesh);
+    template<typename MeshType>
     void bindMeshToGPU(MeshType& mesh);
-    template<typename MeshType>
-    void rebindMeshToGPU(MeshType& mesh);
-    template<typename MeshType>
-    void rebindToGPU(MeshType& mesh);
     GLFWwindow* initWindow();
 }
 
@@ -36,34 +34,18 @@ void glfw_rendering::glClearError() {
 }
 
 template<typename MeshType>
-void glfw_rendering::bindMeshToGPU(MeshType& mesh) {
-    mesh.dereferenceVertexPointers();
-
+void glfw_rendering::initMesh(MeshType& mesh) {
     glGenVertexArrays(1, &mesh.VAO);
-    glBindVertexArray(mesh.VAO);
-
     glGenBuffers(1, &mesh.VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-    glBufferData(GL_ARRAY_BUFFER, mesh.vertex_size_bytes, mesh.render_vert.data(), GL_STATIC_DRAW);
-
     glGenBuffers(1, &mesh.ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.index_buffer_size_bytes,mesh.index_buffer_ptr->data(),
-        GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, mesh.vertex_stride, (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glUseProgram(mesh.shader_ptr->program);
 }
 
 template<typename MeshType>
-void glfw_rendering::rebindMeshToGPU(MeshType& mesh) {
-    mesh.dereferenceVertexPointers();
+void glfw_rendering::bindMeshToGPU(MeshType& mesh) {
 
     glBindVertexArray(mesh.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-    glBufferData(GL_ARRAY_BUFFER, mesh.vertex_size_bytes, mesh.render_vert.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, mesh.vertex_size_bytes, mesh.vert_ptr->data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.index_buffer_size_bytes, mesh.index_buffer_ptr->data(),
@@ -71,12 +53,6 @@ void glfw_rendering::rebindMeshToGPU(MeshType& mesh) {
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, mesh.vertex_stride, (void*)0);
     glEnableVertexAttribArray(0);
-}
-
-template<typename MeshType>
-void glfw_rendering::rebindToGPU(MeshType& mesh) {
-    rebindMeshToGPU(mesh);
-    glUseProgram(mesh.shader_ptr->program);
 }
 
 #endif //GLFWANCILIARY_H

@@ -14,7 +14,7 @@ public:
     using ResourceType = MeshResource<MeshType::size_v_dm, MeshType::size_b_dm, Triangle>;
     MeshType mesh;
 
-    explicit Triangle(ResourceType& resource) : mesh(Mesh<MeshType::size_v_dm, MeshType::size_b_dm>{resource}) {}
+    explicit Triangle(ResourceType& resource) : Entity(resource.shader), mesh(MeshType{resource}) {}
 
     [[nodiscard]] const static ResourceType loadMeshResource();
 };

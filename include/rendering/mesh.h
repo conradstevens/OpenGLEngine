@@ -9,42 +9,34 @@
 #define GLFW_INCLUDE_NONE  //  Ensures gl3.h is included rather than gl.h
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
-#include <Eigen/Dense>
-#include <algorithm>
 
-#include "entities/entity.h"
 #include "rendering/shader.h"
 #include "rendering/mesh_resources.h"
 #include "rendering/glfw_ancillary.h"
 
 template<GLsizei size_v, GLsizei size_b>
 class Mesh{
-    Eigen::Matrix<float, size_v / 2, 1> x_vert{};
-    Eigen::Matrix<float, size_v / 2, 1> y_vert{};
-    std::array<float*, size_v> vert_ptrs{};  // @note Must be after render_vert must be after x_vert and y_vert
-    std::array<float, size_v> render_vert{};
+    std::array<float, size_v>* vert_ptr = nullptr;
     std::array<unsigned int, size_b>* index_buffer_ptr = nullptr;
+
+    GLuint VAO{};
+    GLuint VBO{};
+    GLuint ibo{};
 
     GLsizeiptr vertex_size_bytes{size_v * sizeof(float)};  // @note Must be after render_vert
     GLsizeiptr index_buffer_size_bytes{size_b * sizeof(unsigned int)};  // @note Must be after index_buffer
     GLsizei stride_count{2};  // 2d points
     GLsizei vertex_stride{2 * sizeof(float)};
 
-    GLuint VAO{};
-    GLuint VBO{};
-    GLuint ibo{};
 public:
     const static GLsizei size_v_dm = size_v;
     const static GLsizei size_b_dm = size_b;
-    Shader* shader_ptr = nullptr;
 
     Mesh() = default;
     ~Mesh() = default;
 
     template<typename Entity_T>
     explicit Mesh(MeshResource<size_v, size_b, Entity_T>& mesh_res_);
-    explicit Mesh(Eigen::Matrix<float, size_v / 2, 1> x_vert_, Eigen::Matrix<float, size_v / 2, 1> y_vert_,
-        Shader* shader_, std::array<unsigned int, size_b>* index_buffer_);
 
     Mesh(const Mesh<size_v, size_b>& other);
     Mesh<size_v, size_b>& operator=(const Mesh<size_v, size_b>& other);
@@ -55,28 +47,13 @@ public:
     static GLsizei getBufferSize() {return size_b;};
     static GLsizei getVertexSize() {return size_v;};
 
-    // void bindToGPU();
-    //
-    // void rebindMeshToGPU();
-    //
-    // void rebindToGPU();
-
 private:
-    std::array<float*, size_v> init_vert_ptrs();
 
-    void dereferenceVertexPointers() {
-        std::transform(vert_ptrs.begin(), vert_ptrs.end(), render_vert.begin(),
-            [](const float* ptr_)->float{return *ptr_;});
-    }
+    template<typename MeshType>
+    friend void glfw_rendering::initMesh(MeshType& mesh);
 
     template<typename MeshType>
     friend void glfw_rendering::bindMeshToGPU(MeshType& mesh);
-
-    template<typename MeshType>
-    friend void glfw_rendering::rebindMeshToGPU(MeshType& mesh);
-
-    template<typename MeshType>
-    friend void glfw_rendering::rebindToGPU(MeshType& mesh);
 
 };
 
@@ -87,86 +64,47 @@ private:
 template<GLsizei size_v, GLsizei size_b>
 template<typename Entity_T>
 Mesh<size_v, size_b>::Mesh(MeshResource<size_v, size_b, Entity_T> &mesh_res_) :
-    x_vert(mesh_res_.x_vert),
-    y_vert(mesh_res_.y_vert),
-    vert_ptrs(init_vert_ptrs()),
-    index_buffer_ptr(&mesh_res_.index_buffer),
-    shader_ptr(&mesh_res_.shader){
-}
-
-template<GLsizei size_v, GLsizei size_b>
-Mesh<size_v, size_b>::Mesh(
-        Eigen::Matrix<float, size_v / 2, 1> x_vert_,
-        Eigen::Matrix<float, size_v / 2, 1> y_vert_,
-        Shader* shader_,
-        std::array<unsigned int, size_b>* index_buffer_) :
-    x_vert(x_vert_),
-    y_vert(y_vert_),
-    vert_ptrs(init_vert_ptrs()),
-    index_buffer_ptr(index_buffer_),
-    shader_ptr(shader_){
+    vert_ptr(&mesh_res_.vert),
+    index_buffer_ptr(&mesh_res_.index_buffer){
 }
 
 template<GLsizei size_v, GLsizei size_b>
 Mesh<size_v, size_b>::Mesh(const Mesh<size_v, size_b> &other) :
-    x_vert(other.x_vert),
-    y_vert(other.y_vert),
-    vert_ptrs(init_vert_ptrs()),
-    index_buffer_ptr(other.index_buffer_ptr),
-    shader_ptr(other.shader_ptr){
+    vert_ptr(other.vert_ptr),
+    index_buffer_ptr(other.index_buffer_ptr){
 }
 
 template<GLsizei size_v, GLsizei size_b>
 Mesh<size_v, size_b>& Mesh<size_v, size_b>::operator=(const Mesh<size_v, size_b> &other) {
     if (this != &other) {
-        x_vert = other.x_vert;
-        y_vert = other.y_vert;
-        vert_ptrs = init_vert_ptrs();
+        vert_ptr = other.vert_ptr;
         index_buffer_ptr =other.index_buffer_ptr;
         VAO = 0;
         VBO = 0;
         ibo = 0;
-        shader_ptr = other.shader_ptr;
     }
     return *this;
 }
 
 template<GLsizei size_v, GLsizei size_b>
 Mesh<size_v, size_b>::Mesh(Mesh<size_v, size_b> &&other) noexcept :
-    x_vert(std::move(other.x_vert)),
-    y_vert(std::move(other.y_vert)),
-    vert_ptrs(init_vert_ptrs()),
+    vert_ptr(other.vert_ptr),
     index_buffer_ptr(other.index_buffer_ptr),
     VAO(other.VAO),
     VBO(other.VBO),
-    ibo(other.ibo),
-    shader_ptr(other.shader_ptr){
+    ibo(other.ibo){
 }
 
 template<GLsizei size_v, GLsizei size_b>
 Mesh<size_v, size_b>& Mesh<size_v, size_b>::operator=(Mesh<size_v, size_b> &&other) noexcept {
     if (this != &other) {
-        x_vert = std::move(other.x_vert);
-        y_vert = std::move(other.y_vert);
-        vert_ptrs = init_vert_ptrs();
-        index_buffer_ptr =other.index_buffer_ptr;
+        vert_ptr = other.vert_ptr;
+        index_buffer_ptr = other.index_buffer_ptr;
         VAO = other.VAO;
         VBO = other.VBO;
         ibo = other.ibo;
-        shader_ptr = other.shader_ptr;
     }
     return *this;
 }
-
-template<GLsizei size_v, GLsizei size_b>
-std::array<float*, size_v> Mesh<size_v, size_b>::init_vert_ptrs(){
-    std::array<float*, size_v> vertex_ptrs_{};
-    for (size_t i = 0; i < size_v / 2; ++i) {
-        vertex_ptrs_[i*2]     = &x_vert[i];
-        vertex_ptrs_[i*2 + 1] = &y_vert[i];
-    }
-    return vertex_ptrs_;
-}
-
 
 #endif //MESH_H

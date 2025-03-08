@@ -7,6 +7,10 @@
 #include <tuple>
 #include <vector>
 
+#include <lib/include/glm/glm.hpp>
+#include <lib/include/glm/gtc/matrix_transform.hpp>
+#include <lib/include/glm/gtc/type_ptr.hpp>
+
 #include "entities/entity.h"
 #include "rendering/glfw_ancillary.h"
 
@@ -57,7 +61,7 @@ template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
 void Scene<EntityTypes...>::spawnEntity() {
     Entity_T entity(getEntityResource<Entity_T>());
-    bindMeshToGPU(entity.mesh);
+    initMesh(entity.mesh);
     entities.push_back(std::move(Variant_Entity_Type(std::move(entity))));
 }
 
@@ -75,7 +79,13 @@ void Scene<EntityTypes...>::render() {
     for (Variant_Entity_Type& variant_entity : entities) {
 
         std::visit([&](auto& variant_entity_) {
-            rebindToGPU(variant_entity_.mesh);
+
+            Shader shader = *variant_entity_.static_shader_ptr;
+            shader.set_color(glm::vec4{1.0, 0, 0, 1.0});
+            shader.set_pose(variant_entity_.pose);
+
+
+            bindMeshToGPU(variant_entity_.mesh);
             glDrawElements(GL_TRIANGLES, variant_entity_.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
             }, variant_entity);
 

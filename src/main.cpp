@@ -55,34 +55,41 @@ int main() {
     } else {
         GLFWwindow* window = initWindow();
 
-        Triangle::ResourceType triangleMeshResource{Triangle::loadMeshResource()};
-        triangleMeshResource.shader.initProgram();
-        Triangle triangle{triangleMeshResource};
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIANGLE_1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Triangle::ResourceType triangle_mesh_resource{Triangle::loadMeshResource()};
+        triangle_mesh_resource.shader.initProgram();
+        Triangle triangle{triangle_mesh_resource};
 
         triangle.pose.x =  0.9;
         triangle.pose.y = -0.4;
         triangle.pose.r = 3.14;
 
-        bindMeshToGPU(triangle.mesh);
+        initMesh(triangle.mesh);
 
-        // Set Color
-        int vertexColorLocation = glGetUniformLocation(triangle.mesh.shader_ptr->program, "u_color");
-        glUseProgram(triangle.mesh.shader_ptr->program);
-        glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIANGLE_2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Triangle triangle_2{triangle_mesh_resource};
 
-        std::cout << vertexColorLocation << std::endl;
+        triangle_2.pose.x = -0.9;
+        triangle_2.pose.y =  0.4;
+        triangle_2.pose.r = 3.14;
 
-        // Set location
-        glm::mat3 move_matrix = translation::getMoveMatrix(triangle);
-        int move_location = glGetUniformLocation(triangle.mesh.shader_ptr->program, "u_move");
-        glUniformMatrix3fv(move_location, 1, GL_FALSE, glm::value_ptr(move_matrix));
-        std::cout << move_location << std::endl;
+        initMesh(triangle_2.mesh);
 
-        // Set Rotation
-        glm::mat3 rotation_matrix = translation::getRotationMatrix(triangle);
-        int rotation_location = glGetUniformLocation(triangle.mesh.shader_ptr->program, "u_rotation");
-        glUniformMatrix3fv(rotation_location, 1, GL_FALSE, glm::value_ptr(rotation_matrix));
-        std::cout << rotation_location << std::endl;
+        triangle_2.static_shader_ptr->set_color(glm::vec4{0.0, 1.0, 0.0, 1.0});
+        triangle_2.static_shader_ptr->set_pose(triangle_2.pose);
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SQUARE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        Square::ResourceType square_resource{Square::loadMeshResource()};
+        square_resource.shader.initProgram();
+        Square square{square_resource};
+
+        square.pose.x = -0.5;
+        square.pose.y =  0.8;
+        square.pose.r = 3.14 / 4;
+
+        initMesh(square.mesh);
+
 
         while (!glfwWindowShouldClose(window))
         {
@@ -90,9 +97,28 @@ int main() {
             glClear(GL_COLOR_BUFFER_BIT);
             glClearError();
 
-            // Rendering loop here
-            rebindToGPU(triangle.mesh);
+            triangle.shader.set_color(glm::vec4{1.0, 0.0, 0.0, 1.0});
+            triangle.shader.set_pose(triangle.pose);
+            glUseProgram(triangle.shader.program);
+
+            bindMeshToGPU(triangle.mesh);
             glDrawElements(GL_TRIANGLES, triangle.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
+
+
+
+            square.static_shader_ptr->set_color(glm::vec4{0.0, 0.0, 1.0, 1.0});
+            square.static_shader_ptr->set_pose(square.pose);
+            glUseProgram(square.static_shader_ptr->program);
+            bindMeshToGPU(square.mesh);
+            glDrawElements(GL_TRIANGLES, square.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
+
+
+
+            triangle_2.static_shader_ptr->set_color(glm::vec4{0.0, 1.0, 0.0, 1.0});
+            triangle_2.static_shader_ptr->set_pose(triangle_2.pose);
+            glUseProgram(triangle_2.static_shader_ptr->program);
+            bindMeshToGPU(triangle_2.mesh);
+            glDrawElements(GL_TRIANGLES, triangle_2.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
 
             glCheckError();
 

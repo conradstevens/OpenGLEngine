@@ -6,13 +6,22 @@
 #define ENTITY_H
 #include <concepts>
 #include "physics/pose.h"
+#include "rendering/Shader.h"
 
 class Entity {
 public:
     Pose pose{};
+    Shader shader{};
+    Shader* static_shader_ptr = nullptr;
 
-    Entity() = default;
+    Entity(const Shader &shader_) : shader(shader_), static_shader_ptr(&shader){}
     virtual ~Entity() = default;
+
+    Entity(const Entity& other);
+    Entity &operator=(const Entity& other);
+
+    Entity(Entity&& other) noexcept;
+    Entity &operator=(Entity&& other) noexcept;
 };
 
 template <typename T>
