@@ -76,16 +76,19 @@ void Scene<EntityTypes...>::removeEntity(Entity_T& entity) {
 
 template<EntityDerived ... EntityTypes>
 void Scene<EntityTypes...>::render() {
+
+    (std::get<typename EntityTypes::ResourceType>(static_entity_refs).shader.initProgram(), ...);
+
     for (Variant_Entity_Type& variant_entity : entities) {
 
         std::visit([&](auto& variant_entity_) {
 
             Shader shader = *variant_entity_.static_shader_ptr;
+            glUseProgram(shader.program);
             shader.set_color(glm::vec4{1.0, 0, 0, 1.0});
             shader.set_pose(variant_entity_.pose);
-
-
             bindMeshToGPU(variant_entity_.mesh);
+
             glDrawElements(GL_TRIANGLES, variant_entity_.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
             }, variant_entity);
 

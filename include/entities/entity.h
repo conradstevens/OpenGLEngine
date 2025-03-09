@@ -14,7 +14,7 @@ public:
     Shader shader{};
     Shader* static_shader_ptr = nullptr;
 
-    Entity(const Shader &shader_) : shader(shader_), static_shader_ptr(&shader){}
+    Entity(Shader &shader_) : shader(shader_), static_shader_ptr(&shader_){}
     virtual ~Entity() = default;
 
     Entity(const Entity& other);

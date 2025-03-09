@@ -26,6 +26,7 @@ const Square::ResourceType Square::loadMeshResource() {
 
     Shader shader{std::move(vertex_shader_source),
         std::move(fragment_shader_source)};
+    shader.initProgram();
 
     ResourceType resource{std::move(shader),
         std::move(index_buffer),

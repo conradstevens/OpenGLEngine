@@ -23,15 +23,14 @@ Shader::Shader(std::string vertex_shader_source_,
 Shader::Shader(const Shader &other) :
     vertex_shader_source(other.vertex_shader_source),
     fragment_shader_source(other.fragment_shader_source){
-    if (other.isCompiled) initProgram();
+    initProgram();
 }
 
 Shader& Shader::operator=(const Shader& other) {
     if (this != &other) {
         vertex_shader_source = other.vertex_shader_source;
         fragment_shader_source = other.fragment_shader_source;
-        GLuint program{};
-        if (other.isCompiled) initProgram();
+        initProgram();
     }
     return *this;
 }
@@ -52,7 +51,6 @@ Shader & Shader::operator&=(Shader &&other) noexcept {
 }
 
 void Shader::set_color(const glm::vec4& color_vec) {
-    glUseProgram(program);
     glUniform4f(vertex_color_location, color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
 }
 

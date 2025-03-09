@@ -23,11 +23,10 @@
 using namespace glfw_rendering;
 
 int main() {
-    if (false) {
+    if (true) {
         GLFWwindow* window = initWindow();
 
-        Scene<Triangle, Square> scene{};
-        scene.spawnEntity<Square>();
+        Scene<Triangle> scene{};
         scene.spawnEntity<Triangle>();
 
         while (!glfwWindowShouldClose(window))
