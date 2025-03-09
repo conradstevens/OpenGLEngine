@@ -22,6 +22,8 @@ public:
 
     Entity(Entity&& other) noexcept;
     Entity &operator=(Entity&& other) noexcept;
+
+    void move(float x_, float y_, float r_);
 };
 
 template <typename T>

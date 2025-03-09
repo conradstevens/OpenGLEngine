@@ -30,3 +30,9 @@ Entity &Entity::operator=(Entity &&other) noexcept {
     }
     return *this;
 }
+
+void Entity::move(float x_, float y_, float r_) {
+    pose.x += x_;
+    pose.y += y_;
+    pose.r += r_;
+}

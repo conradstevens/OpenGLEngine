@@ -30,7 +30,7 @@ public:
     typename Entity_T::ResourceType& getEntityResource();
 
     template<EntityDerived Entity_T>
-    void spawnEntity();
+    Entity_T& spawnEntity();
 
     template<EntityDerived Entity_T>
     void removeEntity(Entity_T& entity);
@@ -59,10 +59,11 @@ typename Entity_T::ResourceType& Scene<EntityTypes...>::getEntityResource() {
 
 template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
-void Scene<EntityTypes...>::spawnEntity() {
+Entity_T& Scene<EntityTypes...>::spawnEntity() {
     Entity_T entity(getEntityResource<Entity_T>());
     initMesh(entity.mesh);
     entities.push_back(std::move(Variant_Entity_Type(std::move(entity))));
+    return std::get<Entity_T>(entities[entities.size() - 1]);
 }
 
 template<EntityDerived ... EntityTypes>
@@ -76,8 +77,6 @@ void Scene<EntityTypes...>::removeEntity(Entity_T& entity) {
 
 template<EntityDerived ... EntityTypes>
 void Scene<EntityTypes...>::render() {
-
-    (std::get<typename EntityTypes::ResourceType>(static_entity_refs).shader.initProgram(), ...);
 
     for (Variant_Entity_Type& variant_entity : entities) {
 

@@ -3,7 +3,11 @@
 // //
 #include <iostream>
 #include <array>
+#include <thread>
 
+#include <../../lib/include/glm/glm.hpp>
+#include <../../lib/include/glm/gtc/matrix_transform.hpp>
+#include <../../lib/include/glm/gtc/type_ptr.hpp>
 
 #include "rendering/mesh.h"
 #include "entities/square.h"
@@ -13,11 +17,6 @@
 #include "rendering/scene.h"
 #include "rendering/shader.h"
 #include "physics/pose.h"
-#include "rendering/translation.h"
-
-#include <../../lib/include/glm/glm.hpp>
-#include <../../lib/include/glm/gtc/matrix_transform.hpp>
-#include <../../lib/include/glm/gtc/type_ptr.hpp>
 
 
 using namespace glfw_rendering;
@@ -27,7 +26,7 @@ int main() {
         GLFWwindow* window = initWindow();
 
         Scene<Triangle> scene{};
-        scene.spawnEntity<Triangle>();
+        Triangle& triangle = scene.spawnEntity<Triangle>();
 
         while (!glfwWindowShouldClose(window))
         {
@@ -37,6 +36,7 @@ int main() {
 
             // Rendering loop here
             scene.render();
+            std::this_thread::sleep_for(std::chrono::duration<double>(1.0/60.0));
 
             glCheckError();
 
