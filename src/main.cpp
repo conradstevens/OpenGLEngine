@@ -4,6 +4,7 @@
 #include <iostream>
 #include <array>
 #include <thread>
+#include <future>
 
 #include <../../lib/include/glm/glm.hpp>
 #include <../../lib/include/glm/gtc/matrix_transform.hpp>
@@ -43,9 +44,13 @@ int main() {
             glClearError();
 
             // Rendering loop here
+            std::future<void> async_timer =
+                std::async([]() {std::this_thread::sleep_for(std::chrono::duration<double>(1.0/60.0));});
+
             triangle1.move(0, 0, 0.1);
             scene.render();
-            std::this_thread::sleep_for(std::chrono::duration<double>(1.0/60.0));
+
+            async_timer.get();
 
             glCheckError();
 

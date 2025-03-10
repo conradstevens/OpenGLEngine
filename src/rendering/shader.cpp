@@ -22,23 +22,35 @@ Shader::Shader(std::string vertex_shader_source_,
 
 Shader::Shader(const Shader &other) :
     vertex_shader_source(other.vertex_shader_source),
-    fragment_shader_source(other.fragment_shader_source){
-    initProgram();
+    fragment_shader_source(other.fragment_shader_source),
+    vertex_color_location(other.vertex_color_location),
+    move_location(other.move_location),
+    rotation_location(other.rotation_location),
+    program(other.program),
+    isCompiled(other.isCompiled){
 }
 
 Shader& Shader::operator=(const Shader& other) {
     if (this != &other) {
         vertex_shader_source = other.vertex_shader_source;
         fragment_shader_source = other.fragment_shader_source;
-        initProgram();
+        vertex_color_location = other.vertex_color_location;
+        move_location = other.move_location;
+        rotation_location = other.rotation_location;
+        program = other.program;
+        isCompiled = other.isCompiled;
     }
     return *this;
 }
 
 Shader::Shader(Shader &&other) noexcept :
     vertex_shader_source(std::move(other.vertex_shader_source)),
-    fragment_shader_source(std::move(other.fragment_shader_source)){
-    program = other.program;
+    fragment_shader_source(std::move(other.fragment_shader_source)),
+    program(other.program),
+    vertex_color_location(other.vertex_color_location),
+    move_location(other.move_location),
+    rotation_location(other.rotation_location),
+    isCompiled(other.isCompiled){
 }
 
 Shader & Shader::operator&=(Shader &&other) noexcept {
@@ -46,6 +58,11 @@ Shader & Shader::operator&=(Shader &&other) noexcept {
         vertex_shader_source = std::move(other.vertex_shader_source);
         fragment_shader_source = std::move(other.fragment_shader_source);
         program = other.program;
+        program = other.program;
+        vertex_color_location = other.vertex_color_location;
+        move_location = other.move_location;
+        rotation_location = other.rotation_location;
+        isCompiled = other.isCompiled;
     }
     return *this;
 }

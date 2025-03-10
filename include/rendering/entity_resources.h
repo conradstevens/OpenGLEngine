@@ -32,8 +32,6 @@ struct EntityResource {
     index_buffer(index_buffer_),
     vert(vert_),
     mesh(Mesh<size_v, size_b>{&vert, &index_buffer}){
-        shader.initProgram();
-        mesh.init();
     }
     EntityResource(const EntityResource<size_v, size_b, Entity_T>& other);
     EntityResource<size_v, size_b, Entity_T>& operator=(const EntityResource<size_v, size_b, Entity_T>& other);
@@ -48,8 +46,6 @@ EntityResource<size_v, size_b, Entity_T>::EntityResource(const EntityResource<si
     index_buffer(other.index_buffer),
     vert(other.vert),
     mesh(other.mesh) {
-    shader.initProgram();
-    mesh.init();
     mesh.vert_ptr = &vert;
     mesh.index_buffer_ptr = &index_buffer;
 }
@@ -63,8 +59,6 @@ EntityResource<size_v, size_b, Entity_T>& EntityResource<size_v, size_b, Entity_
     mesh = other.mesh;
     mesh.vert_ptr = &vert;
     mesh.index_buffer_ptr = &index_buffer;
-    shader.initProgram();
-    mesh.initProgram();
     return *this;
 }
 

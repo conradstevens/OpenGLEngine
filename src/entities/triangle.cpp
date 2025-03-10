@@ -6,7 +6,7 @@
 #include "rendering/entity_resources.h"
 
 
-const Triangle::ResourceType Triangle::loadMeshResource() {
+Triangle::ResourceType Triangle::loadMeshResource() {
 
     std::string vertex_shader_source = Shader::readShaderFile(
         "../src/shaders/vertex_shader_translation_uniform.shader");

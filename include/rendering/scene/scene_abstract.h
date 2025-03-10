@@ -3,6 +3,9 @@
 //
 #ifndef SCENE_ABSTRACT_H
 #define SCENE_ABSTRACT_H
+#include <thread>
+#include <future>
+
 #include "entities/entity.h"
 
 template <EntityDerived... EntityTypes>
@@ -13,6 +16,9 @@ protected:
     template<EntityDerived Entity_T>
     typename Entity_T::ResourceType& getEntityResource();
 
+    template<EntityDerived Entity_T>
+    void initEntityResource();
+
 public:
     Scene();
     virtual ~Scene() = default;
@@ -22,7 +28,13 @@ public:
 template<EntityDerived ... EntityTypes>
 Scene<EntityTypes...>::Scene() :
     static_entity_refs({EntityTypes::loadMeshResource()...}) {
-    (std::get<typename EntityTypes::ResourceType>(static_entity_refs).shader.initProgram(), ...);
+    std::tuple<std::future<typename EntityTypes::ResourceType>...> async_function_results =
+        std::make_tuple(std::async(&(EntityTypes::loadMeshResource))...);
+
+    static_entity_refs = std::make_tuple(
+        std::get<std::future<typename EntityTypes::ResourceType>>(async_function_results).get()...);
+    
+    (initEntityResource<EntityTypes>(), ...);
 }
 
 template<EntityDerived ... EntityTypes>
@@ -33,6 +45,13 @@ typename Entity_T::ResourceType & Scene<EntityTypes...>::getEntityResource() {
     return entity_resource;
 }
 
+template<EntityDerived ... EntityTypes>
+template<EntityDerived Entity_T>
+void Scene<EntityTypes...>::initEntityResource() {
+    typename Entity_T::ResourceType& entity_resource = getEntityResource<Entity_T>();
+    entity_resource.mesh.init();
+    entity_resource.shader.initProgram();
+}
 
 
 #endif //SCENE_ABSTRACT_H

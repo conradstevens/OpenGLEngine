@@ -7,7 +7,7 @@
 #include "Eigen/Dense"
 
 
-const Square::ResourceType Square::loadMeshResource() {
+Square::ResourceType Square::loadMeshResource() {
 
     std::string vertex_shader_source = Shader::readShaderFile(
         "../src/shaders/vertex_shader_translation_uniform.shader");

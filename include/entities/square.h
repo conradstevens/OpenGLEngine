@@ -18,7 +18,7 @@ public:
     explicit Square(ResourceType& resource) : Entity(resource.shader),
         mesh(MeshType{resource}), static_mesh_ptr(&resource.mesh) {}
 
-    [[nodiscard]] const static ResourceType loadMeshResource();
+    [[nodiscard]] static ResourceType loadMeshResource();
 };
 
 
