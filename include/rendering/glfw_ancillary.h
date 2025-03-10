@@ -14,8 +14,6 @@ namespace glfw_rendering {
     inline void glCheckError();
 
     template<typename MeshType>
-    void initMesh(MeshType& mesh);
-    template<typename MeshType>
     void bindMeshToGPU(MeshType& mesh);
     GLFWwindow* initWindow();
 }
@@ -31,13 +29,6 @@ void glfw_rendering::glCheckError() {
 
 void glfw_rendering::glClearError() {
     while (glGetError() != GL_NO_ERROR);
-}
-
-template<typename MeshType>
-void glfw_rendering::initMesh(MeshType& mesh) {
-    glGenVertexArrays(1, &mesh.VAO);
-    glGenBuffers(1, &mesh.VBO);
-    glGenBuffers(1, &mesh.ibo);
 }
 
 template<typename MeshType>

@@ -15,13 +15,16 @@ add_executable(${PROJECT_NAME}
         include/rendering/mesh.h
         include/rendering/glfw_ancillary.h
             src/rendering/glfw_ancillary.cpp
-        include/rendering/mesh_resources.h
-        include/rendering/scene.h
+        include/rendering/entity_resources.h
+        include/rendering/scene/scene_ordered_layer.h
         src/main.cpp
         include/entities/triangle.h
         src/entities/triangle.cpp
         include/physics/pose.h
         include/rendering/translation.h
+        include/rendering/scene/scene_abstract.h
+        include/rendering/scene/scene_layered.h
+        include/rendering/mesh_forward.h
 )
 
 # Include

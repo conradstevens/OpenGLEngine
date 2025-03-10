@@ -3,7 +3,7 @@
 //
 
 #include "entities/square.h"
-#include "rendering/mesh_resources.h"
+#include "rendering/entity_resources.h"
 #include "Eigen/Dense"
 
 
@@ -26,11 +26,10 @@ const Square::ResourceType Square::loadMeshResource() {
 
     Shader shader{std::move(vertex_shader_source),
         std::move(fragment_shader_source)};
-    shader.initProgram();
 
     ResourceType resource{std::move(shader),
         std::move(index_buffer),
         std::move(verts)};
 
-    return resource;
+    return std::move(resource);
 }

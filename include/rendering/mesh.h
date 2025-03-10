@@ -11,14 +11,11 @@
 #include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
 
 #include "rendering/shader.h"
-#include "rendering/mesh_resources.h"
+#include "rendering/entity_resources.h"
 #include "rendering/glfw_ancillary.h"
 
 template<GLsizei size_v, GLsizei size_b>
 class Mesh{
-    std::array<float, size_v>* vert_ptr = nullptr;
-    std::array<unsigned int, size_b>* index_buffer_ptr = nullptr;
-
     GLuint VAO{};
     GLuint VBO{};
     GLuint ibo{};
@@ -29,6 +26,8 @@ class Mesh{
     GLsizei vertex_stride{2 * sizeof(float)};
 
 public:
+    std::array<float, size_v>* vert_ptr = nullptr;
+    std::array<unsigned int, size_b>* index_buffer_ptr = nullptr;
     const static GLsizei size_v_dm = size_v;
     const static GLsizei size_b_dm = size_b;
 
@@ -36,7 +35,9 @@ public:
     ~Mesh() = default;
 
     template<typename Entity_T>
-    explicit Mesh(MeshResource<size_v, size_b, Entity_T>& mesh_res_);
+    explicit Mesh(EntityResource<size_v, size_b, Entity_T>& mesh_res_);
+
+    explicit Mesh(std::array<float, size_v>* verts, std::array<unsigned int, size_b>* buffers);
 
     Mesh(const Mesh<size_v, size_b>& other);
     Mesh<size_v, size_b>& operator=(const Mesh<size_v, size_b>& other);
@@ -47,10 +48,9 @@ public:
     static GLsizei getBufferSize() {return size_b;};
     static GLsizei getVertexSize() {return size_v;};
 
-private:
+    void init();
 
-    template<typename MeshType>
-    friend void glfw_rendering::initMesh(MeshType& mesh);
+private:
 
     template<typename MeshType>
     friend void glfw_rendering::bindMeshToGPU(MeshType& mesh);
@@ -63,9 +63,15 @@ private:
 
 template<GLsizei size_v, GLsizei size_b>
 template<typename Entity_T>
-Mesh<size_v, size_b>::Mesh(MeshResource<size_v, size_b, Entity_T> &mesh_res_) :
+Mesh<size_v, size_b>::Mesh(EntityResource<size_v, size_b, Entity_T> &mesh_res_) :
     vert_ptr(&mesh_res_.vert),
     index_buffer_ptr(&mesh_res_.index_buffer){
+}
+
+template<GLsizei size_v, GLsizei size_b>
+Mesh<size_v, size_b>::Mesh(std::array<float, size_v>* vert_ptr_, std::array<unsigned int, size_b>* index_buffer_ptr_) :
+    vert_ptr(vert_ptr_),
+    index_buffer_ptr(index_buffer_ptr_){
 }
 
 template<GLsizei size_v, GLsizei size_b>
@@ -105,6 +111,13 @@ Mesh<size_v, size_b>& Mesh<size_v, size_b>::operator=(Mesh<size_v, size_b> &&oth
         ibo = other.ibo;
     }
     return *this;
+}
+
+template<GLsizei size_v, GLsizei size_b>
+void Mesh<size_v, size_b>::init() {
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &ibo);
 }
 
 #endif //MESH_H

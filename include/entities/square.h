@@ -11,10 +11,12 @@
 class Square : public Entity {
 public:
     using MeshType = Mesh<8, 6>;
-    using ResourceType = MeshResource<MeshType::size_v_dm, MeshType::size_b_dm, Square>;
+    using ResourceType = EntityResource<MeshType::size_v_dm, MeshType::size_b_dm, Square>;
     MeshType mesh;
+    MeshType* static_mesh_ptr = nullptr;
 
-    explicit Square(ResourceType& resource) : Entity(resource.shader), mesh(MeshType{resource}) {}
+    explicit Square(ResourceType& resource) : Entity(resource.shader),
+        mesh(MeshType{resource}), static_mesh_ptr(&resource.mesh) {}
 
     [[nodiscard]] const static ResourceType loadMeshResource();
 };

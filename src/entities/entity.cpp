@@ -31,6 +31,10 @@ Entity &Entity::operator=(Entity &&other) noexcept {
     return *this;
 }
 
+bool Entity::operator==(const Entity &other) const {
+    return this == &other;
+}
+
 void Entity::move(float x_, float y_, float r_) {
     pose.x += x_;
     pose.y += y_;

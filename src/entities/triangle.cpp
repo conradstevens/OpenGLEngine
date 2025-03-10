@@ -3,7 +3,7 @@
 //
 
 #include "entities/triangle.h"
-#include "rendering/mesh_resources.h"
+#include "rendering/entity_resources.h"
 
 
 const Triangle::ResourceType Triangle::loadMeshResource() {
@@ -21,14 +21,12 @@ const Triangle::ResourceType Triangle::loadMeshResource() {
         -0.05f, -0.0433f,
         -0.0f,   0.0433f};
 
-
     Shader shader{std::move(vertex_shader_source),
         std::move(fragment_shader_source)};
-    shader.initProgram();
 
     ResourceType resource{std::move(shader),
         std::move(index_buffer),
         std::move(verts)};
 
-    return resource;
+    return std::move(resource);
 }

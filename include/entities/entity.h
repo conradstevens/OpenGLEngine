@@ -6,7 +6,7 @@
 #define ENTITY_H
 #include <concepts>
 #include "physics/pose.h"
-#include "rendering/Shader.h"
+#include "rendering/shader.h"
 
 class Entity {
 public:
@@ -22,6 +22,8 @@ public:
 
     Entity(Entity&& other) noexcept;
     Entity &operator=(Entity&& other) noexcept;
+
+    bool operator==(const Entity& other) const;
 
     void move(float x_, float y_, float r_);
 };

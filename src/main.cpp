@@ -12,9 +12,10 @@
 #include "rendering/mesh.h"
 #include "entities/square.h"
 #include "entities/triangle.h"
-#include "rendering/mesh_resources.h"
+#include "rendering/entity_resources.h"
 #include "rendering/glfw_ancillary.h"
-#include "rendering/scene.h"
+#include "rendering/scene/scene_ordered_layer.h"
+#include "rendering/scene/scene_layered.h"
 #include "rendering/shader.h"
 #include "physics/pose.h"
 
@@ -22,11 +23,18 @@
 using namespace glfw_rendering;
 
 int main() {
+
     if (true) {
         GLFWwindow* window = initWindow();
 
-        Scene<Triangle> scene{};
-        Triangle& triangle = scene.spawnEntity<Triangle>();
+        SceneLayered<Triangle, Square> scene{};
+        // SceneOrderedLayer<Triangle, Square> scene{};
+        Triangle& triangle1 = scene.spawnEntity<Triangle>();
+        Square& square1 = scene.spawnEntity<Square>();
+        square1.move(-0.2, 0.0, 0.2);
+
+        Triangle& triangle2 = scene.spawnEntity<Triangle>();
+        triangle2.move(0.3, 0.4, 0);
 
         while (!glfwWindowShouldClose(window))
         {
@@ -35,6 +43,7 @@ int main() {
             glClearError();
 
             // Rendering loop here
+            triangle1.move(0, 0, 0.1);
             scene.render();
             std::this_thread::sleep_for(std::chrono::duration<double>(1.0/60.0));
 
@@ -63,7 +72,7 @@ int main() {
         triangle.pose.y = -0.4;
         triangle.pose.r = 3.14;
 
-        initMesh(triangle.mesh);
+        (triangle.mesh);
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIANGLE_2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Triangle triangle_2{triangle_mesh_resource};
@@ -72,7 +81,7 @@ int main() {
         triangle_2.pose.y =  0.4;
         triangle_2.pose.r = 3.14;
 
-        initMesh(triangle_2.mesh);
+        (triangle_2.mesh);
 
         triangle_2.static_shader_ptr->set_color(glm::vec4{0.0, 1.0, 0.0, 1.0});
         triangle_2.static_shader_ptr->set_pose(triangle_2.pose);
@@ -87,7 +96,7 @@ int main() {
         square.pose.y =  0.8;
         square.pose.r = 3.14 / 4;
 
-        initMesh(square.mesh);
+        (square.mesh);
 
 
         while (!glfwWindowShouldClose(window))
