@@ -5,6 +5,8 @@
 #ifndef POSE_H
 #define POSE_H
 
+#include <array>
+
 #include <lib/include/glm/glm.hpp>
 #include <lib/include/glm/gtc/matrix_transform.hpp>
 #include <lib/include/glm/gtc/type_ptr.hpp>
@@ -14,8 +16,9 @@ public:
     float x{};
     float y{};
     float r{};
-
-    glm::vec4 color{1.0, 0, 0, 1.0};
+    float acc{};
+    float speed{};
+    std::array<float, 2> direction{};
 };
 
 #endif //POSE_H

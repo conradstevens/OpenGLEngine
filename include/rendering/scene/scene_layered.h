@@ -91,9 +91,13 @@ void SceneLayered<EntityTypes...>::renderEntityVector() {
 
     glUseProgram(shared_entity_shader.program);
     bindMeshToGPU(shared_entity_mesh);
+    glm::vec4 shared_entity_color = entity_vector[0].getColor();
 
     for (Entity_T& entity : entity_vector) {
-        shared_entity_shader.set_color(glm::vec4{1.0, 0.0, 0.0, 1.0});
+
+        //TODO solver.setp(entity). // Maybe later solver is given list of entities?
+
+        shared_entity_shader.set_color(shared_entity_color);
         shared_entity_shader.set_pose(entity.pose);
         glDrawElements(GL_TRIANGLES, shared_entity_mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
     }

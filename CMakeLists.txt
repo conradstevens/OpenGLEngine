@@ -42,5 +42,8 @@ target_link_libraries(${PROJECT_NAME}
         "-framework CoreFoundation"
 )
 
-find_package(Eigen3 3.3 REQUIRED)
-target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
+target_link_libraries(${PROJECT_NAME}
+        ${CMAKE_SOURCE_DIR}/lib/binaries/box2d/libbox2dd.a
+)
+
+

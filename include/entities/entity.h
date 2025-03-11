@@ -14,6 +14,8 @@ public:
     Shader shader{};
     Shader* static_shader_ptr = nullptr;
 
+    glm::vec4 color{1.0, 1.0, 1.0, 1.0};
+
     Entity(Shader &shader_) : shader(shader_), static_shader_ptr(&shader_){}
     virtual ~Entity() = default;
 
@@ -26,6 +28,8 @@ public:
     bool operator==(const Entity& other) const;
 
     void move(float x_, float y_, float r_);
+
+    [[nodiscard]] virtual glm::vec4 getColor() const {return color;};
 };
 
 template <typename T>

@@ -1,6 +1,8 @@
 // //
 // // Created by Conrad Stevens  on 2025-03-03.
 // //
+#define GL_SILENCE_DEPRECATION
+
 #include <iostream>
 #include <array>
 #include <thread>
@@ -9,6 +11,8 @@
 #include <../../lib/include/glm/glm.hpp>
 #include <../../lib/include/glm/gtc/matrix_transform.hpp>
 #include <../../lib/include/glm/gtc/type_ptr.hpp>
+
+#include "box2d/box2d.h"
 
 #include "rendering/mesh.h"
 #include "entities/square.h"
@@ -23,9 +27,48 @@
 
 using namespace glfw_rendering;
 
+
 int main() {
 
-    if (true) {
+    // Create world
+    b2WorldDef worldDef = b2DefaultWorldDef();  // Create world definer
+    worldDef.gravity = (b2Vec2){0.0f, -10.0f};  // Create Gravity
+    b2WorldId worldId = b2CreateWorld(&worldDef);  // Create world on identifier
+
+    // Create Ground Box - Static Body
+    b2BodyDef groundBodyDef = b2DefaultBodyDef();  // Create ground body object definer
+    groundBodyDef.position = (b2Vec2){0.0f, -10.0f};  // Set the position of the object defined by the definer
+    b2BodyId groundId = b2CreateBody(worldId, &groundBodyDef);  // Create the body identifier from the ground body definer
+    b2Polygon groundBox = b2MakeBox(50.0f, 10.0f);  // make a box polygon
+    b2ShapeDef groundShapeDef = b2DefaultShapeDef();  // Create Shape definer
+    b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);  // Create a polygon shape using the ground id, ground shape definer and ground box definer
+
+    // Create Obj Box - Dynamic Body
+    b2BodyDef bodyDef = b2DefaultBodyDef();  // Create a definer for the dynamic box
+    bodyDef.type = b2_dynamicBody;  // Make the dynamic box dynamic (respond to gravity ect...)
+    bodyDef.position = (b2Vec2){0.0f, 4.0f};  // Set the position of the dynamic box when it will be defined
+    b2BodyId bodyId = b2CreateBody(worldId, &bodyDef);  // Create a body id associated with the world from the body definer
+    b2Polygon dynamicBox = b2MakeBox(1.0f, 1.0f);  // Define the dynamic box shape polygon
+    b2ShapeDef shapeDef = b2DefaultShapeDef();  // Create a Shape definer
+    shapeDef.density = 1.0f;  // Declare the properties of the shape definer
+    shapeDef.friction = 0.3f;  // ``
+    b2CreatePolygonShape(bodyId, &shapeDef, &dynamicBox);  // Create the box given the shape and body
+
+    // Simulate the world
+    float timeStep = 1.0f / 60.0f;
+    int subStepCount = 4;
+
+    for (int i = 0; i < 90; ++i)
+    {
+        b2World_Step(worldId, timeStep, subStepCount);
+        b2Vec2 position = b2Body_GetPosition(bodyId);
+        b2Rot rotation = b2Body_GetRotation(bodyId);
+        printf("%4.2f %4.2f %4.2f\n", position.x, position.y, b2Rot_GetAngle(rotation));
+    }
+
+    b2DestroyWorld(worldId);
+
+    if (false) {
         GLFWwindow* window = initWindow();
 
         SceneLayered<Triangle, Square> scene{};
@@ -63,88 +106,6 @@ int main() {
 
         glfwDestroyWindow(window);
         glfwTerminate();
-        return 0;
-
-    } else {
-        GLFWwindow* window = initWindow();
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIANGLE_1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        Triangle::ResourceType triangle_mesh_resource{Triangle::loadMeshResource()};
-        triangle_mesh_resource.shader.initProgram();
-        Triangle triangle{triangle_mesh_resource};
-
-        triangle.pose.x =  0.9;
-        triangle.pose.y = -0.4;
-        triangle.pose.r = 3.14;
-
-        (triangle.mesh);
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIANGLE_2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        Triangle triangle_2{triangle_mesh_resource};
-
-        triangle_2.pose.x = -0.9;
-        triangle_2.pose.y =  0.4;
-        triangle_2.pose.r = 3.14;
-
-        (triangle_2.mesh);
-
-        triangle_2.static_shader_ptr->set_color(glm::vec4{0.0, 1.0, 0.0, 1.0});
-        triangle_2.static_shader_ptr->set_pose(triangle_2.pose);
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SQUARE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        Square::ResourceType square_resource{Square::loadMeshResource()};
-        square_resource.shader.initProgram();
-        Square square{square_resource};
-
-        square.pose.x = -0.5;
-        square.pose.y =  0.8;
-        square.pose.r = 3.14 / 4;
-
-        (square.mesh);
-
-
-        while (!glfwWindowShouldClose(window))
-        {
-            // OpenGL Rendering related code
-            glClear(GL_COLOR_BUFFER_BIT);
-            glClearError();
-
-            triangle.shader.set_color(glm::vec4{1.0, 0.0, 0.0, 1.0});
-            triangle.shader.set_pose(triangle.pose);
-            glUseProgram(triangle.shader.program);
-
-            bindMeshToGPU(triangle.mesh);
-            glDrawElements(GL_TRIANGLES, triangle.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
-
-
-
-            square.static_shader_ptr->set_color(glm::vec4{0.0, 0.0, 1.0, 1.0});
-            square.static_shader_ptr->set_pose(square.pose);
-            glUseProgram(square.static_shader_ptr->program);
-            bindMeshToGPU(square.mesh);
-            glDrawElements(GL_TRIANGLES, square.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
-
-
-
-            triangle_2.static_shader_ptr->set_color(glm::vec4{0.0, 1.0, 0.0, 1.0});
-            triangle_2.static_shader_ptr->set_pose(triangle_2.pose);
-            glUseProgram(triangle_2.static_shader_ptr->program);
-            bindMeshToGPU(triangle_2.mesh);
-            glDrawElements(GL_TRIANGLES, triangle_2.mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
-
-            glCheckError();
-
-            // Swap front and back buffers
-            glfwSwapBuffers(window);
-
-            // Poll for and process events
-            glfwPollEvents();
-        }
-
-        glfwDestroyWindow(window);
-        glfwTerminate();
-        return 0;
     }
     return 0;
 }

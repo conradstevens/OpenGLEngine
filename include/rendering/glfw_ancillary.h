@@ -7,6 +7,7 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 
+
 namespace glfw_rendering {
     void setCallBacks(GLFWwindow* window);
 

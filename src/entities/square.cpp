@@ -4,7 +4,6 @@
 
 #include "entities/square.h"
 #include "rendering/entity_resources.h"
-#include "Eigen/Dense"
 
 
 Square::ResourceType Square::loadMeshResource() {
