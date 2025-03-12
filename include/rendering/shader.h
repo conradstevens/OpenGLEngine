@@ -23,6 +23,7 @@ class Shader{
     GLuint vertex_color_location{};
     GLuint move_location{};
     GLuint rotation_location{};
+    GLuint zoom_location{};
 
 public:
     bool isCompiled = false;
@@ -40,6 +41,7 @@ public:
 
     void set_color(const glm::vec4& color_vec);
     void set_pose(const Pose& pose);
+    void set_zoom(float zoom);
 
     static std::string readShaderFile(const std::string& path);
 

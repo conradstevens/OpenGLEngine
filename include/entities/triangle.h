@@ -16,6 +16,8 @@ public:
     MeshType* static_mesh_ptr = nullptr;
     glm::vec4 color{1.0, 0.0, 0.0, 1.0};
 
+    Triangle() = default;
+
     explicit Triangle(ResourceType& resource) : Entity(resource.shader),
         mesh(MeshType{resource}), static_mesh_ptr(&resource.mesh) {}
 

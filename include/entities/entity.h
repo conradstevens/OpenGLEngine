@@ -16,6 +16,7 @@ public:
 
     glm::vec4 color{1.0, 1.0, 1.0, 1.0};
 
+    Entity() = default;
     Entity(Shader &shader_) : shader(shader_), static_shader_ptr(&shader_){}
     virtual ~Entity() = default;
 

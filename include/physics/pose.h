@@ -11,13 +11,13 @@
 #include <lib/include/glm/gtc/matrix_transform.hpp>
 #include <lib/include/glm/gtc/type_ptr.hpp>
 
+
+// TODO replace with dynamic body
 class Pose{
 public:
     float x{};
     float y{};
     float r{};
-    float acc{};
-    float speed{};
     std::array<float, 2> direction{};
 };
 

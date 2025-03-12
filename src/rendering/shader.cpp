@@ -79,6 +79,10 @@ void Shader::set_pose(const Pose& pose) {
     glUniformMatrix3fv(rotation_location, 1, GL_FALSE, glm::value_ptr(rotation_matrix));
 }
 
+void Shader::set_zoom(float zoom) {
+    glUniform1f(zoom_location, zoom);
+}
+
 std::string Shader::readShaderFile(const std::string& path) {
     std::ifstream file(path);
 
@@ -126,6 +130,7 @@ void Shader::initProgram() {
     move_location = glGetUniformLocation(program, "u_move");
     rotation_location = glGetUniformLocation(program, "u_rotation");
     vertex_color_location = glGetUniformLocation(program, "u_color");
+    zoom_location = glGetUniformLocation(program, "u_zoom");
     isCompiled = true;
 }
 

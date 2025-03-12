@@ -18,10 +18,10 @@ Square::ResourceType Square::loadMeshResource() {
          2, 3, 0};
 
     std::array<float, MeshType::size_v_dm> verts =
-    {-0.05f, -0.05f,
-      0.05f, -0.05f,
-      0.05f,  0.05f,
-     -0.05f, 0.05f};
+    {-0.5f, -0.5f,
+      0.5f, -0.5f,
+      0.5f,  0.5f,
+     -0.5f,  0.5f};
 
     Shader shader{std::move(vertex_shader_source),
         std::move(fragment_shader_source)};

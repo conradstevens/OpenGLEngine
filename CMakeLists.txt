@@ -25,6 +25,10 @@ add_executable(${PROJECT_NAME}
         include/rendering/scene/scene_abstract.h
         include/rendering/scene/scene_layered.h
         include/rendering/mesh_forward.h
+        include/physics/world.h
+        include/physics/dynamic_body.h
+        src/physics/dynamic_body.cpp
+        src/physics/world.cpp
 )
 
 # Include

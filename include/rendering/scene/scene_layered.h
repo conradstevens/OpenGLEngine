@@ -5,7 +5,7 @@
 #ifndef SCENE_LAYERED_H
 #define SCENE_LAYERED_H
 #include <unordered_map>
-#include <vector>
+#include <forward_list>
 #include <typeindex>
 #include <typeinfo>
 
@@ -21,7 +21,8 @@ using namespace glfw_rendering;
 
 template <EntityDerived... EntityTypes>
 class SceneLayered : public Scene<EntityTypes...> {
-    std::tuple<std::vector<EntityTypes>...> entities;
+    float zoom = 0.2f;
+    std::tuple<std::forward_list<EntityTypes>...> entities;
 
 public:
 
@@ -39,15 +40,14 @@ public:
 
 private:
     template<EntityDerived Entity_T>
-    std::vector<Entity_T>& getEntityVector();
+    std::forward_list<Entity_T>& getEntityFwList();
 
     template<EntityDerived Entity_T>
-    void renderEntityVector();
+    void renderEntityFwList();
 };
 
 template<EntityDerived ... EntityTypes>
 SceneLayered<EntityTypes...>::SceneLayered() : Scene<EntityTypes...>() {
-    (getEntityVector<EntityTypes>().reserve(100), ...);
 }
 
 template<EntityDerived ... EntityTypes>
@@ -55,45 +55,45 @@ template<EntityDerived Entity_T>
 Entity_T& SceneLayered<EntityTypes...>::spawnEntity() {
     Entity_T entity{this->template getEntityResource<Entity_T>()};
     entity.mesh.init();
-    std::vector<Entity_T>& entity_vector = getEntityVector<Entity_T>();
-    entity_vector.push_back(std::move(entity));
-    return entity_vector[entity_vector.size() - 1];
+    std::forward_list<Entity_T>& entity_fw_list = getEntityFwList<Entity_T>();
+    entity_fw_list.push_front(std::move(entity));
+    return entity_fw_list.front();
 }
 
 template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
 void SceneLayered<EntityTypes...>::removeEntity(Entity_T& entity) {
-    std::vector<Entity_T>& entity_vector = getEntityVector<Entity_T>();
-    auto it = std::find(entity_vector.begin(), entity_vector.end(), entity);
-    if (it != entity_vector.end()) {
-        entity_vector.erase(it);
-    }
+    std::forward_list<Entity_T>& entity_fw_list = getEntityFwList<Entity_T>();
+    entity_fw_list.remove(entity);
 }
 
 template<EntityDerived ... EntityTypes>
 void SceneLayered<EntityTypes...>::render() {
-    (renderEntityVector<EntityTypes>(), ...);
+    (renderEntityFwList<EntityTypes>(), ...);
 }
 
 template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
-std::vector<Entity_T>& SceneLayered<EntityTypes...>::getEntityVector() {
-    return std::get<std::vector<Entity_T>>(entities);
+std::forward_list<Entity_T>& SceneLayered<EntityTypes...>::getEntityFwList() {
+    return std::get<std::forward_list<Entity_T>>(entities);
 }
 
 template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
-void SceneLayered<EntityTypes...>::renderEntityVector() {
-    std::vector<Entity_T>& entity_vector = getEntityVector<Entity_T>();
+void SceneLayered<EntityTypes...>::renderEntityFwList() {
+    std::forward_list<Entity_T>& entity_fw_list = getEntityFwList<Entity_T>();
+    if (entity_fw_list.empty()) return;
     typename Entity_T::ResourceType& entity_resource = this->template getEntityResource<Entity_T>();
     Shader& shared_entity_shader = entity_resource.shader;
     typename Entity_T::MeshType& shared_entity_mesh = entity_resource.mesh;
 
     glUseProgram(shared_entity_shader.program);
     bindMeshToGPU(shared_entity_mesh);
-    glm::vec4 shared_entity_color = entity_vector[0].getColor();
+    glm::vec4 shared_entity_color = entity_fw_list.front().getColor();
 
-    for (Entity_T& entity : entity_vector) {
+    shared_entity_shader.set_zoom(0.1);
+
+    for (Entity_T& entity : entity_fw_list) {
 
         //TODO solver.setp(entity). // Maybe later solver is given list of entities?
 
