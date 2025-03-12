@@ -31,16 +31,14 @@ using namespace glfw_rendering;
 int main() {
     GLFWwindow* window = initWindow();
 
-    SceneLayered<Triangle, Square> scene{};
+    SceneLayered<Square> scene{};
     // SceneOrderedLayer<Triangle, Square> scene{};
 
-    Triangle& triangle1 = scene.spawnEntity<Triangle>();
+    Square& square = scene.spawnEntity<Square>(0, 0);
 
-    Square& square1 = scene.spawnEntity<Square>();
-    square1.move(-2.0, 0.0, 2.0);
+    // Square& square1 = scene.spawnEntity<Square>(2, 0);
 
-    Triangle& triangle2 = scene.spawnEntity<Triangle>();
-    triangle2.move(3.0, 4.0, 0.0);
+    // Triangle& triangle2 = scene.spawnEntity<Triangle>(3, 4);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -52,7 +50,7 @@ int main() {
         std::future<void> async_timer =
             std::async([]() {std::this_thread::sleep_for(std::chrono::duration<double>(1.0/60.0));});
 
-        triangle1.move(0, 0, 0.1);
+        scene.world.step();
         scene.render();
 
         async_timer.get();

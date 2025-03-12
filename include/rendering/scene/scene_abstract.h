@@ -7,6 +7,7 @@
 #include <future>
 
 #include "entities/entity.h"
+#include "physics/world.h"
 
 template <EntityDerived... EntityTypes>
 class Scene {
@@ -20,6 +21,7 @@ protected:
     void initEntityResource();
 
 public:
+    World world{};
     Scene();
     virtual ~Scene() = default;
     virtual void render() = 0;

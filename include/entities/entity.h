@@ -5,19 +5,29 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 #include <concepts>
+
+#include "physics/dynamic_body.h"
 #include "physics/pose.h"
 #include "rendering/shader.h"
+#include "physics/world.h"
 
 class Entity {
 public:
-    Pose pose{};
-    Shader shader{};
+    Shader shader{};  // TODO decide if I need this...
     Shader* static_shader_ptr = nullptr;
+    World* world_ptr = nullptr;
 
+    DynamicBody body{};
     glm::vec4 color{1.0, 1.0, 1.0, 1.0};
 
     Entity() = default;
-    Entity(Shader &shader_) : shader(shader_), static_shader_ptr(&shader_){}
+    Entity(Shader &shader_, World& world_, float x_, float y_, float density_, float friction_) :
+        shader(shader_),
+        static_shader_ptr(&shader_),
+        world_ptr(&world_),
+        body(DynamicBody{world_.worldId, x_, y_, density_, friction_})  // TODO make body in entity derived type and pass to entity here
+        {}
+
     virtual ~Entity() = default;
 
     Entity(const Entity& other);
@@ -30,6 +40,7 @@ public:
 
     void move(float x_, float y_, float r_);
 
+    [[nodiscard]] virtual Pose getPose() const;
     [[nodiscard]] virtual glm::vec4 getColor() const {return color;};
 };
 

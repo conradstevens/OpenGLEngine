@@ -8,12 +8,13 @@
 
 class World {
     b2WorldDef worldDef{};
-    b2WorldId worldId{};
 
-    float timeStep = 1.0f / 60.0f;
-    int subStepCount = 4;
+    const float timeStep = 1.0f / 60.0f;
+    const int subStepCount = 4;
 
 public:
+    b2WorldId worldId{};
+
     World();
     ~World();
 

@@ -14,12 +14,18 @@ public:
     using ResourceType = EntityResource<MeshType::size_v_dm, MeshType::size_b_dm, Triangle>;
     MeshType mesh{};
     MeshType* static_mesh_ptr = nullptr;
+
+    static constexpr float density = 1.0f;
+    static constexpr float friction = 0.3f;
     glm::vec4 color{1.0, 0.0, 0.0, 1.0};
 
     Triangle() = default;
 
-    explicit Triangle(ResourceType& resource) : Entity(resource.shader),
-        mesh(MeshType{resource}), static_mesh_ptr(&resource.mesh) {}
+    explicit Triangle(ResourceType& resource, World& world_, float x_, float y_) :
+    Entity(resource.shader, world_, x_, y_, density, friction),
+    mesh(MeshType{resource}),
+    static_mesh_ptr(&resource.mesh)
+    {}
 
     [[nodiscard]] static ResourceType loadMeshResource();
 

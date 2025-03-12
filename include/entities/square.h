@@ -5,6 +5,7 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 #include "entity.h"
+#include "physics/dynamic_body.h"
 #include "rendering/mesh.h"
 
 
@@ -12,14 +13,20 @@ class Square : public Entity {
 public:
     using MeshType = Mesh<8, 6>;
     using ResourceType = EntityResource<MeshType::size_v_dm, MeshType::size_b_dm, Square>;
-    MeshType mesh;
+    MeshType mesh{};
     MeshType* static_mesh_ptr = nullptr;
+
+    static constexpr float density = 1.0f;
+    static constexpr float friction = 0.3f;
     glm::vec4 color{1.0, 0.0, 1.0, 1.0};
 
     Square() = default;
 
-    explicit Square(ResourceType& resource) : Entity(resource.shader),
-        mesh(MeshType{resource}), static_mesh_ptr(&resource.mesh) {}
+    explicit Square(ResourceType& resource, World& world_, float x_, float y_) :
+        Entity(resource.shader, world_, x_, y_, density, friction),
+        mesh(MeshType{resource}),
+        static_mesh_ptr(&resource.mesh)
+        {}
 
     [[nodiscard]] static ResourceType loadMeshResource();
 

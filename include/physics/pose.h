@@ -15,10 +15,12 @@
 // TODO replace with dynamic body
 class Pose{
 public:
-    float x{};
-    float y{};
-    float r{};
-    std::array<float, 2> direction{};
+    const float x{};
+    const float y{};
+    const float r{};
+
+    Pose() = default;
+    Pose(const float x_, const float y_, const float r_): x(x_), y(y_), r(r_) {}
 };
 
 #endif //POSE_H

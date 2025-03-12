@@ -21,7 +21,7 @@ using namespace glfw_rendering;
 
 template <EntityDerived... EntityTypes>
 class SceneLayered : public Scene<EntityTypes...> {
-    float zoom = 0.2f;
+    float zoom = 0.1f;
     std::tuple<std::forward_list<EntityTypes>...> entities;
 
 public:
@@ -31,7 +31,7 @@ public:
     ~SceneLayered() override {};
 
     template<EntityDerived Entity_T>
-    Entity_T& spawnEntity();
+    Entity_T& spawnEntity(float x_, float y_);
 
     template<EntityDerived Entity_T>
     void removeEntity(Entity_T& entity);
@@ -52,8 +52,8 @@ SceneLayered<EntityTypes...>::SceneLayered() : Scene<EntityTypes...>() {
 
 template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
-Entity_T& SceneLayered<EntityTypes...>::spawnEntity() {
-    Entity_T entity{this->template getEntityResource<Entity_T>()};
+Entity_T& SceneLayered<EntityTypes...>::spawnEntity(float x_, float y_) {
+    Entity_T entity{this->template getEntityResource<Entity_T>(), this->world, x_, y_};
     entity.mesh.init();
     std::forward_list<Entity_T>& entity_fw_list = getEntityFwList<Entity_T>();
     entity_fw_list.push_front(std::move(entity));
@@ -91,14 +91,14 @@ void SceneLayered<EntityTypes...>::renderEntityFwList() {
     bindMeshToGPU(shared_entity_mesh);
     glm::vec4 shared_entity_color = entity_fw_list.front().getColor();
 
-    shared_entity_shader.set_zoom(0.1);
+    shared_entity_shader.set_zoom(zoom);
 
     for (Entity_T& entity : entity_fw_list) {
 
         //TODO solver.setp(entity). // Maybe later solver is given list of entities?
 
         shared_entity_shader.set_color(shared_entity_color);
-        shared_entity_shader.set_pose(entity.pose);
+        shared_entity_shader.set_pose(entity.getPose());
         glDrawElements(GL_TRIANGLES, shared_entity_mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);
     }
 }
