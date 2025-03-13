@@ -10,6 +10,7 @@
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
 #include <array>
+#include "box2d/box2d.h"
 
 #include "rendering/shader.h"
 #include "rendering/mesh_forward.h"
@@ -21,18 +22,16 @@ struct EntityResource {
     std::array<float, size_v> vert{};
     Mesh<size_v, size_b> mesh{};
     Shader shader{};
+    b2Polygon polygon{};
 
     EntityResource() = default;
     ~EntityResource() = default;
 
     EntityResource(const Shader& shader_,
                  const std::array<unsigned int, size_b>& index_buffer_,
-                 const std::array<float, size_v>& vert_) :
-    shader(shader_),
-    index_buffer(index_buffer_),
-    vert(vert_),
-    mesh(Mesh<size_v, size_b>{&vert, &index_buffer}){
-    }
+                 const std::array<float, size_v>& vert_,
+                 b2Polygon& polygon_);
+
     EntityResource(const EntityResource<size_v, size_b, Entity_T>& other);
     EntityResource<size_v, size_b, Entity_T>& operator=(const EntityResource<size_v, size_b, Entity_T>& other);
 
@@ -41,11 +40,22 @@ struct EntityResource {
 };
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
+EntityResource<size_v, size_b, Entity_T>::EntityResource(const Shader &shader_,
+const std::array<unsigned int, size_b> &index_buffer_, const std::array<float, size_v> &vert_, b2Polygon& polygon_) :
+    shader(shader_),
+    index_buffer(index_buffer_),
+    vert(vert_),
+    mesh(Mesh<size_v, size_b>{&vert, &index_buffer}),
+    polygon(polygon_){
+    }
+
+template<GLsizei size_v, size_t size_b, typename Entity_T>
 EntityResource<size_v, size_b, Entity_T>::EntityResource(const EntityResource<size_v, size_b, Entity_T> &other) :
     shader(other.shader),
     index_buffer(other.index_buffer),
     vert(other.vert),
-    mesh(other.mesh) {
+    mesh(other.mesh),
+    polygon(other.polygon){
     mesh.vert_ptr = &vert;
     mesh.index_buffer_ptr = &index_buffer;
 }
@@ -57,6 +67,7 @@ EntityResource<size_v, size_b, Entity_T>& EntityResource<size_v, size_b, Entity_
     index_buffer = other.index_buffer;
     vert = other.vert;
     mesh = other.mesh;
+    polygon = other.polygon;
     mesh.vert_ptr = &vert;
     mesh.index_buffer_ptr = &index_buffer;
     return *this;
@@ -67,9 +78,12 @@ EntityResource<size_v, size_b, Entity_T>::EntityResource(EntityResource<size_v, 
     index_buffer(std::move(other.index_buffer)),
     vert(std::move(other.vert)),
     mesh(std::move(other.mesh)),
-    shader(std::move(other.shader)) {
+    shader(std::move(other.shader)),
+    polygon(std::move(other.polygon)){
     mesh.vert_ptr = &vert;
     mesh.index_buffer_ptr = &index_buffer;
+
+    other.polygon = {};
 }
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
@@ -80,8 +94,11 @@ EntityResource<size_v, size_b, Entity_T> & EntityResource<size_v, size_b, Entity
         vert = std::move(other.vert);
         mesh = std::move(other.mesh);
         shader = std::move(other.shader);
+        polygon = std::move(other.polygon);
         mesh.vert_ptr = &vert;
         mesh.index_buffer_ptr = &index_buffer;
+
+        other.polygon = {};
     }
     return *this;
 }

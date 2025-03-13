@@ -39,12 +39,12 @@ bool Entity::operator==(const Entity &other) const {
     return this == &other;
 }
 
-void Entity::move(float x_, float y_, float r_) {
-    //Todo
-}
-
 Pose Entity::getPose() const {
     b2Vec2 position = b2Body_GetPosition(body.bodyId);
     b2Rot rotation = b2Body_GetRotation(body.bodyId);
     return Pose{position.x, position.y, b2Rot_GetAngle(rotation)};
+}
+
+b2Polygon Entity::getPolygon() {
+    return b2MakeSquare(0.5f);
 }

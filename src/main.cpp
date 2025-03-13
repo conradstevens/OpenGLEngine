@@ -7,6 +7,8 @@
 #include <array>
 #include <thread>
 #include <future>
+#include <random>
+
 
 #include <../../lib/include/glm/glm.hpp>
 #include <../../lib/include/glm/gtc/matrix_transform.hpp>
@@ -31,14 +33,8 @@ using namespace glfw_rendering;
 int main() {
     GLFWwindow* window = initWindow();
 
-    SceneLayered<Square> scene{};
-    // SceneOrderedLayer<Triangle, Square> scene{};
-
-    Square& square = scene.spawnEntity<Square>(0, 0);
-
-    // Square& square1 = scene.spawnEntity<Square>(2, 0);
-
-    // Triangle& triangle2 = scene.spawnEntity<Triangle>(3, 4);
+    SceneLayered<Square, Triangle> scene{};
+    unsigned int frameCount = 0;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -48,10 +44,25 @@ int main() {
 
         // Rendering loop here
         std::future<void> async_timer =
-            std::async([]() {std::this_thread::sleep_for(std::chrono::duration<double>(1.0/60.0));});
+        std::async([]() {std::this_thread::sleep_for(std::chrono::duration<double>(1.0/60.0));});
+        
+        {  // Event loop
+            if (frameCount % 30 == 0) {
+                float x_spawn = -9.0f + (std::rand() / (RAND_MAX / 18.0f));
+                float y_spawn = 0.0f;
 
-        scene.world.step();
-        scene.render();
+                switch (static_cast<int>(round(static_cast<float>(rand()) / RAND_MAX))) {
+                    case 0:
+                        scene.spawnEntity<Triangle>(x_spawn, y_spawn);
+                        break;
+                    default:
+                        scene.spawnEntity<Square>(x_spawn, y_spawn);
+                        break;
+                }
+            }
+            scene.world.step();
+            scene.render();
+        }
 
         async_timer.get();
 
@@ -62,6 +73,7 @@ int main() {
 
         // Poll for and process events
         glfwPollEvents();
+        frameCount++;
     }
 
     glfwDestroyWindow(window);

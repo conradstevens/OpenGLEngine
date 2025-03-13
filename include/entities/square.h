@@ -23,7 +23,7 @@ public:
     Square() = default;
 
     explicit Square(ResourceType& resource, World& world_, float x_, float y_) :
-        Entity(resource.shader, world_, x_, y_, density, friction),
+        Entity(resource.shader, world_, x_, y_, resource.polygon, density, friction),
         mesh(MeshType{resource}),
         static_mesh_ptr(&resource.mesh)
         {}

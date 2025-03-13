@@ -8,7 +8,7 @@
 class DynamicBody {
 public:
     b2BodyId bodyId{};
-    b2Polygon dynamicBox{};
+    b2Polygon polygon{};
     b2ShapeDef shapeDef{};
     b2WorldId worldId{};
     float posX{0.0f};
@@ -17,8 +17,7 @@ public:
     float friction{0.3f};
 
     DynamicBody() = default;
-    DynamicBody(b2WorldId worldID, float x_, float y_);
-    DynamicBody(b2WorldId worldID, float x_, float y_, float density_, float friction_);
+    DynamicBody(b2WorldId worldID, float x_, float y_, const b2Polygon& polygon_, float density_, float friction_);
     ~DynamicBody();
 
     DynamicBody(const DynamicBody& other);

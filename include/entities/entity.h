@@ -21,11 +21,11 @@ public:
     glm::vec4 color{1.0, 1.0, 1.0, 1.0};
 
     Entity() = default;
-    Entity(Shader &shader_, World& world_, float x_, float y_, float density_, float friction_) :
+    Entity(Shader &shader_, World& world_, float x_, float y_, b2Polygon polygon_, float density_, float friction_) :
         shader(shader_),
         static_shader_ptr(&shader_),
         world_ptr(&world_),
-        body(DynamicBody{world_.worldId, x_, y_, density_, friction_})  // TODO make body in entity derived type and pass to entity here
+        body(DynamicBody{world_.worldId, x_, y_, polygon_, density_, friction_})  // TODO make body in entity derived type and pass to entity here
         {}
 
     virtual ~Entity() = default;
@@ -38,10 +38,11 @@ public:
 
     bool operator==(const Entity& other) const;
 
-    void move(float x_, float y_, float r_);
-
     [[nodiscard]] virtual Pose getPose() const;
     [[nodiscard]] virtual glm::vec4 getColor() const {return color;};
+
+protected:
+    virtual b2Polygon getPolygon();
 };
 
 template <typename T>

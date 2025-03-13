@@ -12,7 +12,6 @@
 #include <lib/include/glm/gtc/type_ptr.hpp>
 
 
-// TODO replace with dynamic body
 class Pose{
 public:
     const float x{};

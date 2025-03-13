@@ -94,9 +94,6 @@ void SceneLayered<EntityTypes...>::renderEntityFwList() {
     shared_entity_shader.set_zoom(zoom);
 
     for (Entity_T& entity : entity_fw_list) {
-
-        //TODO solver.setp(entity). // Maybe later solver is given list of entities?
-
         shared_entity_shader.set_color(shared_entity_color);
         shared_entity_shader.set_pose(entity.getPose());
         glDrawElements(GL_TRIANGLES, shared_entity_mesh.getBufferSize(), GL_UNSIGNED_INT, nullptr);

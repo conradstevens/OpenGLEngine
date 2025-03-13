@@ -2,6 +2,8 @@
 // Created by Conrad Stevens  on 2025-03-03.
 //
 
+#include "box2d/box2d.h"
+
 #include "entities/square.h"
 #include "rendering/entity_resources.h"
 
@@ -26,9 +28,12 @@ Square::ResourceType Square::loadMeshResource() {
     Shader shader{std::move(vertex_shader_source),
         std::move(fragment_shader_source)};
 
+    b2Polygon polygon = b2MakeSquare(0.5f);
+
     ResourceType resource{std::move(shader),
         std::move(index_buffer),
-        std::move(verts)};
+        std::move(verts),
+        polygon};
 
     return std::move(resource);
 }

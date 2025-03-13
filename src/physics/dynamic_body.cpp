@@ -3,15 +3,11 @@
 //
 #include "physics/dynamic_body.h"
 
-// dynamic_body.cpp modifications
-DynamicBody::DynamicBody(b2WorldId worldId_, float x_, float y_) :
-    DynamicBody(worldId_, x_, y_, 1.0f, 0.3f) {
-}
-
-DynamicBody::DynamicBody(b2WorldId worldId_, float x_, float y_, float density_, float friction_) :
+DynamicBody::DynamicBody(b2WorldId worldId_, float x_, float y_, const b2Polygon& polygon_, float density_, float friction_) :
     worldId(worldId_),
     posX(x_),
     posY(y_),
+    polygon(polygon_),
     density(density_),
     friction(friction_) {
 
@@ -24,11 +20,11 @@ void DynamicBody::createBody() {
     bodyDef.position = b2Vec2{posX, posY};
 
     bodyId = b2CreateBody(worldId, &bodyDef);
-    dynamicBox = b2MakeBox(0.5f, 0.5f);
+    // polygon = b2MakeSquare(0.5f);
     shapeDef = b2DefaultShapeDef();
     shapeDef.density = density;
     shapeDef.friction = friction;
-    b2CreatePolygonShape(bodyId, &shapeDef, &dynamicBox);
+    b2CreatePolygonShape(bodyId, &shapeDef, &polygon);
 }
 
 DynamicBody::~DynamicBody() {
@@ -36,7 +32,7 @@ DynamicBody::~DynamicBody() {
 }
 
 DynamicBody::DynamicBody(const DynamicBody& other) :
-    dynamicBox(other.dynamicBox),
+    polygon(other.polygon),
     shapeDef(other.shapeDef),
     worldId(other.worldId),
     posX(other.posX),
@@ -48,7 +44,7 @@ DynamicBody::DynamicBody(const DynamicBody& other) :
 
 DynamicBody& DynamicBody::operator=(const DynamicBody& other) {
     if (this != &other) {
-        dynamicBox = other.dynamicBox;
+        polygon = other.polygon;
         shapeDef = other.shapeDef;
         worldId = other.worldId;
         posX = other.posX;
@@ -62,7 +58,7 @@ DynamicBody& DynamicBody::operator=(const DynamicBody& other) {
 
 DynamicBody::DynamicBody(DynamicBody &&other) noexcept :
     bodyId(other.bodyId),
-    dynamicBox(std::move(other.dynamicBox)),
+    polygon(std::move(other.polygon)),
     shapeDef(std::move(other.shapeDef)),
     worldId(other.worldId),
     posX(other.posX),
@@ -77,7 +73,7 @@ DynamicBody::DynamicBody(DynamicBody &&other) noexcept :
 DynamicBody& DynamicBody::operator=(DynamicBody &&other) noexcept {
     if (this != &other) {
         bodyId = other.bodyId;
-        dynamicBox = std::move(other.dynamicBox);
+        polygon = std::move(other.polygon);
         shapeDef = std::move(other.shapeDef);
         worldId = other.worldId;
         posX = other.posX;
