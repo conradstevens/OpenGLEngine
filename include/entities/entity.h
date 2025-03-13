@@ -13,7 +13,6 @@
 
 class Entity {
 public:
-    Shader shader{};  // TODO decide if I need this...
     Shader* static_shader_ptr = nullptr;
     World* world_ptr = nullptr;
 
@@ -22,7 +21,6 @@ public:
 
     Entity() = default;
     Entity(Shader &shader_, World& world_, float x_, float y_, b2Polygon polygon_, float density_, float friction_) :
-        shader(shader_),
         static_shader_ptr(&shader_),
         world_ptr(&world_),
         body(DynamicBody{world_.worldId, x_, y_, polygon_, density_, friction_})  // TODO make body in entity derived type and pass to entity here

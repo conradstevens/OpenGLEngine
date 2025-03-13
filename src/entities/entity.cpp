@@ -6,14 +6,12 @@
 
 
 Entity::Entity(const Entity& other) :
-    shader(other.shader),
     body(other.body),
     static_shader_ptr(other.static_shader_ptr){
 }
 
 Entity &Entity::operator=(const Entity& other) {
     if (this != &other) {
-        shader = other.shader;
         body = other.body;
         static_shader_ptr = other.static_shader_ptr;
     }
@@ -21,14 +19,12 @@ Entity &Entity::operator=(const Entity& other) {
 }
 
 Entity::Entity(Entity &&other) noexcept :
-    shader(std::move(other.shader)),
     body(std::move(other.body)),
     static_shader_ptr(other.static_shader_ptr){
 }
 
 Entity &Entity::operator=(Entity &&other) noexcept {
     if (this != &other) {
-        shader = std::move(other.shader);
         body = std::move(other.body);
         static_shader_ptr = other.static_shader_ptr;
     }

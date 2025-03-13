@@ -13,7 +13,6 @@ class Square : public Entity {
 public:
     using MeshType = Mesh<8, 6>;
     using ResourceType = EntityResource<MeshType::size_v_dm, MeshType::size_b_dm, Square>;
-    MeshType mesh{};
     MeshType* static_mesh_ptr = nullptr;
 
     static constexpr float density = 1.0f;
@@ -24,7 +23,6 @@ public:
 
     explicit Square(ResourceType& resource, World& world_, float x_, float y_) :
         Entity(resource.shader, world_, x_, y_, resource.polygon, density, friction),
-        mesh(MeshType{resource}),
         static_mesh_ptr(&resource.mesh)
         {}
 

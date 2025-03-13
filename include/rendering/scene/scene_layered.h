@@ -54,7 +54,6 @@ template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
 Entity_T& SceneLayered<EntityTypes...>::spawnEntity(float x_, float y_) {
     Entity_T entity{this->template getEntityResource<Entity_T>(), this->world, x_, y_};
-    entity.mesh.init();
     std::forward_list<Entity_T>& entity_fw_list = getEntityFwList<Entity_T>();
     entity_fw_list.push_front(std::move(entity));
     return entity_fw_list.front();
