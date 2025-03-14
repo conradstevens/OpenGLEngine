@@ -8,6 +8,7 @@ add_definitions(-DGL_SILENCE_DEPRECATION)
 
 include_directories(external/include)
 include_directories(external/glm)
+include_directories(external/box2d/include)
 
 include_directories(external/box2d)
 add_subdirectory(external/box2d)
