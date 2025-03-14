@@ -7,7 +7,6 @@ World::World() {
     worldDef = b2DefaultWorldDef();
     worldDef.gravity = (b2Vec2){0.0f, -10.0f};
     worldId = b2CreateWorld(&worldDef);
-    makeWorldWalls();
 }
 
 World::~World() {

@@ -21,21 +21,37 @@ protected:
     void initEntityResource();
 
 public:
-    World world{};
+    World* world_ptr = nullptr;
     Scene();
+    Scene(World* world_);
     virtual ~Scene() = default;
     virtual void render() = 0;
+
+private:
+    void init();
 };
 
 template<EntityDerived ... EntityTypes>
 Scene<EntityTypes...>::Scene() :
     static_entity_refs({EntityTypes::loadMeshResource()...}) {
+    init();
+}
+
+template<EntityDerived ... EntityTypes>
+Scene<EntityTypes...>::Scene(World* world_ptr_) :
+    world_ptr(world_ptr_),
+    static_entity_refs({EntityTypes::loadMeshResource()...}){
+    init();
+}
+
+template<EntityDerived ... EntityTypes>
+void Scene<EntityTypes...>::init() {
     std::tuple<std::future<typename EntityTypes::ResourceType>...> async_function_results =
         std::make_tuple(std::async(&(EntityTypes::loadMeshResource))...);
 
     static_entity_refs = std::make_tuple(
         std::get<std::future<typename EntityTypes::ResourceType>>(async_function_results).get()...);
-    
+
     (initEntityResource<EntityTypes>(), ...);
 }
 

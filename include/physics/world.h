@@ -18,6 +18,12 @@ public:
     World();
     ~World();
 
+    World(const World& other) = delete;
+    World& operator=(const World& other) = delete;
+
+    World(World&& other) noexcept = delete;
+    World& operator=(World&& other) = delete;
+
     void makeWorldWalls();
     void step();
 };
