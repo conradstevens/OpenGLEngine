@@ -21,7 +21,7 @@ int main() {
 
     World world{};
     world.makeWorldWalls();
-    
+
     SceneLayered<Square, Triangle> scene(&world);
 
     unsigned int frameCount = 0;
