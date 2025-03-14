@@ -4,17 +4,13 @@
 
 #ifndef MESH_RESOURCES_H
 #define MESH_RESOURCES_H
-#define GL_SILENCE_DEPRECATION
-#define GL_SILENCE_DEPRECATION
-#define GLFW_INCLUDE_NONE  //  Ensures gl3.h is included rather than gl.h
 #include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
-#include <array>
 #include "box2d/box2d.h"
+#include <array>
 
-#include "rendering/shader.h"
-#include "rendering/mesh_forward.h"
-#include "rendering/glfw_ancillary.h"
+#include "shader.h"
+#include "mesh_forward.h"
+#include "glfw_ancillary.h"
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
 struct EntityResource {

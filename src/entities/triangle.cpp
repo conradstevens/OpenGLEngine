@@ -4,7 +4,7 @@
 // #include <tuple>
 
 #include "entities/triangle.h"
-#include "rendering/entity_resources.h"
+#include "entity_resources.h"
 
 
 Triangle::ResourceType Triangle::loadMeshResource() {

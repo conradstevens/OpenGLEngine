@@ -5,7 +5,7 @@
 #include "box2d/box2d.h"
 
 #include "entities/square.h"
-#include "rendering/entity_resources.h"
+#include "entity_resources.h"
 
 
 Square::ResourceType Square::loadMeshResource() {

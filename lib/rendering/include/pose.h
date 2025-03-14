@@ -5,13 +5,6 @@
 #ifndef POSE_H
 #define POSE_H
 
-#include <array>
-
-#include <lib/include/glm/glm.hpp>
-#include <lib/include/glm/gtc/matrix_transform.hpp>
-#include <lib/include/glm/gtc/type_ptr.hpp>
-
-
 class Pose{
 public:
     const float x{};

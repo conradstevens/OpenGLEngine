@@ -1,8 +1,6 @@
 // //
 // // Created by Conrad Stevens  on 2025-03-03.
 // //
-#define GL_SILENCE_DEPRECATION
-
 #include <iostream>
 #include <array>
 #include <thread>
@@ -10,22 +8,17 @@
 #include <random>
 
 
-#include <../../lib/include/glm/glm.hpp>
-#include <../../lib/include/glm/gtc/matrix_transform.hpp>
-#include <../../lib/include/glm/gtc/type_ptr.hpp>
-
 #include "box2d/box2d.h"
 
-#include "rendering/mesh.h"
+#include "mesh.h"
 #include "entities/square.h"
 #include "entities/triangle.h"
-#include "rendering/entity_resources.h"
-#include "rendering/glfw_ancillary.h"
-#include "rendering/scene/scene_ordered_layer.h"
-#include "rendering/scene/scene_layered.h"
-#include "rendering/shader.h"
-#include "physics/pose.h"
-
+#include "entity_resources.h"
+#include "glfw_ancillary.h"
+#include "scene/scene_ordered_layer.h"
+#include "scene/scene_layered.h"
+#include "shader.h"
+#include "pose.h"
 
 using namespace glfw_rendering;
 

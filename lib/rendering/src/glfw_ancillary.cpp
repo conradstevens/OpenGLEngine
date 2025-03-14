@@ -3,8 +3,8 @@
 //
 #include "iostream"
 
-#include "rendering/glfw_ancillary.h"
-#include "rendering/mesh.h"
+#include "glfw_ancillary.h"
+#include "mesh.h"
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)

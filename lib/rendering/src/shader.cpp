@@ -2,18 +2,17 @@
 // Created by Conrad Stevens  on 2025-03-03.
 //
 
-#define GL_SILENCE_DEPRECATION
-#define GL_SILENCE_DEPRECATION
-#define GLFW_INCLUDE_NONE  //  Ensures gl3.h is included rather than gl.h
+// #define GL_SILENCE_DEPRECATION
+#define GLFW_INCLUDE_NONE
 #include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <array>
 
-#include "rendering/shader.h"
-#include "rendering/translation.h"
+#include "shader.h"
+#include "translation.h"
 
 Shader::Shader(std::string vertex_shader_source_,
         std::string fragment_shader_source_) :
@@ -67,8 +66,12 @@ Shader & Shader::operator&=(Shader &&other) noexcept {
     return *this;
 }
 
-void Shader::set_color(const glm::vec4& color_vec) {
-    glUniform4f(vertex_color_location, color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
+void Shader::set_color(const std::array<float, 4> color_vec) {
+    glUniform4f(vertex_color_location,
+        color_vec.data()[0],
+        color_vec.data()[1],
+        color_vec.data()[2],
+        color_vec.data()[3]);
 }
 
 void Shader::set_pose(const Pose& pose) {

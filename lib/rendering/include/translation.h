@@ -5,12 +5,13 @@
 #ifndef TRANSLATION_H
 #define TRANSLATION_H
 
-#include <cmath>
-#include <lib/include/glm/glm.hpp>
-#include <lib/include/glm/gtc/matrix_transform.hpp>
-#include <lib/include/glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "../physics/pose.h"
+#include <cmath>
+
+#include "pose.h"
 
 
 namespace translation {

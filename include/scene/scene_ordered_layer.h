@@ -7,13 +7,13 @@
 #include <tuple>
 #include <vector>
 
-#include <lib/include/glm/glm.hpp>
-#include <lib/include/glm/gtc/matrix_transform.hpp>
-#include <lib/include/glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "scene_abstract.h"
 #include "entities/entity.h"
-#include "rendering/glfw_ancillary.h"
+#include "glfw_ancillary.h"
 
 using namespace glfw_rendering;
 
@@ -71,7 +71,7 @@ void SceneOrderedLayer<EntityTypes...>::render() {
 
             Shader& shader = *variant_entity_.static_shader_ptr;
             glUseProgram(shader.program);
-            shader.set_color(glm::vec4{1.0, 0, 0, 1.0});
+            shader.set_color(std::array<float, 4>{1.0, 0, 0, 1.0});
             shader.set_pose(variant_entity_.pose);
             bindMeshToGPU(variant_entity_.mesh);
 

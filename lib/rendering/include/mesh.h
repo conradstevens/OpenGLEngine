@@ -4,15 +4,10 @@
 
 #ifndef MESH_H
 #define MESH_H
-#define GL_SILENCE_DEPRECATION
-#define GL_SILENCE_DEPRECATION
-#define GLFW_INCLUDE_NONE  //  Ensures gl3.h is included rather than gl.h
-#include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
 
-#include "rendering/shader.h"
-#include "rendering/entity_resources.h"
-#include "rendering/glfw_ancillary.h"
+#include "shader.h"
+#include "entity_resources.h"
+#include "glfw_ancillary.h"
 
 template<GLsizei size_v, GLsizei size_b>
 class Mesh{

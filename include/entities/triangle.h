@@ -5,7 +5,7 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 #include "entity.h"
-#include "rendering/mesh.h"
+#include "mesh.h"
 
 
 class Triangle : public Entity {
@@ -16,7 +16,7 @@ public:
 
     static constexpr float density = 1.0f;
     static constexpr float friction = 0.3f;
-    glm::vec4 color{0.0, 1.0, 1.0, 1.0};
+    std::array<float, 4> color{0.0, 1.0, 1.0, 1.0};
 
     Triangle() = default;
 
@@ -27,7 +27,7 @@ public:
 
     [[nodiscard]] static ResourceType loadMeshResource();
 
-    [[nodiscard]] glm::vec4 getColor() const override {return color;}
+    [[nodiscard]] std::array<float, 4> getColor() const override {return color;}
 };
 
 

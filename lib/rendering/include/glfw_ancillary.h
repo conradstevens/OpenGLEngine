@@ -4,7 +4,10 @@
 
 #ifndef GLFWANCILIARY_H
 #define GLFWANCILIARY_H
-#include "GLFW/glfw3.h"
+// #define GL_SILENCE_DEPRECATION
+#include <OpenGL/gl3.h>
+#include "GLFW/glfw3.h"  //  gl3 must be included before to prevent GLFW from including gl.h
+
 #include <iostream>
 
 

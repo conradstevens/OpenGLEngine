@@ -6,14 +6,8 @@
 #define SHADER_H
 
 #include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h>  // OpenGL includes after include glfw3
-#include <lib/include/glm/glm.hpp>
-#include <lib/include/glm/gtc/matrix_transform.hpp>
-#include <lib/include/glm/gtc/type_ptr.hpp>
-
 #include <string>
-
-#include "physics/pose.h"
+#include "pose.h"
 
 
 class Shader{
@@ -39,7 +33,7 @@ public:
     Shader(Shader&& other) noexcept;
     Shader& operator&=(Shader&& other) noexcept;
 
-    void set_color(const glm::vec4& color_vec);
+    void set_color(const std::array<float, 4> color_vec);
     void set_pose(const Pose& pose);
     void set_zoom(float zoom);
 

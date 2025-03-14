@@ -9,13 +9,13 @@
 #include <typeindex>
 #include <typeinfo>
 
-#include <lib/include/glm/glm.hpp>
-#include <lib/include/glm/gtc/matrix_transform.hpp>
-#include <lib/include/glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "scene_abstract.h"
 #include "entities/entity.h"
-#include "rendering/glfw_ancillary.h"
+#include "glfw_ancillary.h"
 
 using namespace glfw_rendering;
 
@@ -88,7 +88,7 @@ void SceneLayered<EntityTypes...>::renderEntityFwList() {
 
     glUseProgram(shared_entity_shader.program);
     bindMeshToGPU(shared_entity_mesh);
-    glm::vec4 shared_entity_color = entity_fw_list.front().getColor();
+    std::array<float, 4> shared_entity_color = entity_fw_list.front().getColor();
 
     shared_entity_shader.set_zoom(zoom);
 

@@ -2,52 +2,25 @@ cmake_minimum_required(VERSION 3.29)
 set(CMAKE_CXX_STANDARD 20)
 
 project(OpenGLEngine)
-include_directories(include/)
-include_directories(.)
 
+add_definitions(-DGL_SILENCE_DEPRECATION)
+
+include_directories(external/include)
+add_subdirectory(lib/rendering)
+
+include_directories(include/)
 add_executable(${PROJECT_NAME}
-        include/entities/entity.h
-           src/entities/entity.cpp
-        include/entities/square.h
-            src/entities/square.cpp
-        include/rendering/shader.h
-            src/rendering/shader.cpp
-        include/rendering/mesh.h
-        include/rendering/glfw_ancillary.h
-            src/rendering/glfw_ancillary.cpp
-        include/rendering/entity_resources.h
-        include/rendering/scene/scene_ordered_layer.h
+        src/entities/entity.cpp
+        src/entities/square.cpp
         src/main.cpp
-        include/entities/triangle.h
         src/entities/triangle.cpp
-        include/physics/pose.h
-        include/rendering/translation.h
-        include/rendering/scene/scene_abstract.h
-        include/rendering/scene/scene_layered.h
-        include/rendering/mesh_forward.h
-        include/physics/world.h
-        include/physics/dynamic_body.h
         src/physics/dynamic_body.cpp
         src/physics/world.cpp
 )
 
-# Include
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/lib/include/)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include/)
-
-
 # Local Binaries
 target_link_libraries(${PROJECT_NAME}
-        ${CMAKE_SOURCE_DIR}/lib/binaries/GLFW/libglfw.3.4.dylib  # Cannot build static library
-        "-framework OpenGL"
-        "-framework Cocoa"
-        "-framework IOKit"
-        "-framework CoreVideo"
-        "-framework CoreFoundation"
+        # Internal
+        rendering
+        ${CMAKE_SOURCE_DIR}/external/binaries/box2d/libbox2dd.a
 )
-
-target_link_libraries(${PROJECT_NAME}
-        ${CMAKE_SOURCE_DIR}/lib/binaries/box2d/libbox2dd.a
-)
-
-
