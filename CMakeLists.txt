@@ -4,15 +4,17 @@ set(CMAKE_CXX_STANDARD 20)
 project(OpenGLEngine
         DESCRIPTION "C++ Rendering physics engine using C libraries OpenGL and Box2d")
 
+# External Libraries
 add_definitions(-DGL_SILENCE_DEPRECATION)
+include_directories(external/glfw/include)
+add_subdirectory(external/glfw)
 
-include_directories(external/include)
 include_directories(external/glm)
-include_directories(external/box2d/include)
 
-include_directories(external/box2d)
+include_directories(external/box2d/include)
 add_subdirectory(external/box2d)
 
+# Local
 add_subdirectory(lib/rendering)
 add_subdirectory(testing)
 
@@ -26,10 +28,11 @@ add_executable(${PROJECT_NAME}
         src/physics/world.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC external/include/)
 target_link_libraries(${PROJECT_NAME}
         # Internal
             Rendering
         # External
-            ${CMAKE_SOURCE_DIR}/external/binaries/box2d/libbox2dd.a
+            box2d
+            glfw
+            "-framework OpenGL"
 )

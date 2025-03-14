@@ -10,8 +10,3 @@ target_include_directories(Rendering
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-
-target_link_libraries(${PROJECT_NAME}
-        ${CMAKE_SOURCE_DIR}/external/binaries/GLFW/libglfw.3.dylib  # Cannot build static library
-        "-framework OpenGL"
-)
