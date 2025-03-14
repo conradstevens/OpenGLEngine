@@ -7,6 +7,7 @@ project(OpenGLEngine
 add_definitions(-DGL_SILENCE_DEPRECATION)
 
 include_directories(external/include)
+include_directories(external/include/glm)
 add_subdirectory(lib/rendering)
 add_subdirectory(testing)
 
