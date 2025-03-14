@@ -8,6 +8,10 @@ add_definitions(-DGL_SILENCE_DEPRECATION)
 
 include_directories(external/include)
 include_directories(external/glm)
+
+include_directories(external/box2d)
+add_subdirectory(external/box2d)
+
 add_subdirectory(lib/rendering)
 add_subdirectory(testing)
 
@@ -24,7 +28,6 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC external/include/)
 target_link_libraries(${PROJECT_NAME}
         # Internal
-            testing
             Rendering
         # External
             ${CMAKE_SOURCE_DIR}/external/binaries/box2d/libbox2dd.a
