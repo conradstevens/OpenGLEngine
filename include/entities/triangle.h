@@ -12,14 +12,24 @@
 class Triangle : public Entity {
 public:
     /**
-    * @brief Mesh type defining the mesh size the Triangle Entity.
+    * Size of the entities mesh vertices
     */
-    using MeshType = Mesh<6, 3>;
+    static constexpr size_t size_v_dm = 6;
+
+    /**
+    * Size of the entities Buffer list
+    */
+    static constexpr size_t size_b_dm = 3;
+
+    /**
+    * @brief Mesh type defining the mesh size the Square Entity.
+    */
+    using MeshType = Mesh<size_v_dm, size_b_dm>;
 
     /**
     * @brief Entity resource type defining the size of the resource type.
     */
-    using ResourceType = EntityResource<MeshType::size_v_dm, MeshType::size_b_dm, Triangle>;  // TODO simplify Template
+    using ResourceType = EntityResource<Triangle>;
 
     /**
     * @brief Pointer to the entities mesh.

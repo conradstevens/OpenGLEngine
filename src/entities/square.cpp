@@ -15,11 +15,11 @@ Square::ResourceType Square::loadMeshResource() {
     std::string fragment_shader_source = Shader::readShaderFile(
         "shaders/fragment_shader_uniform.shader");
 
-    std::array<unsigned int, MeshType::size_b_dm> index_buffer =
+    std::array<unsigned int, Square::size_b_dm> index_buffer =
         {0, 1, 2,
          2, 3, 0};
 
-    std::array<float, MeshType::size_v_dm> verts =
+    std::array<float, Square::size_v_dm> verts =
     {-0.5f, -0.5f,
       0.5f, -0.5f,
       0.5f,  0.5f,

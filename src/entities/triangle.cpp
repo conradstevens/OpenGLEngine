@@ -14,10 +14,10 @@ Triangle::ResourceType Triangle::loadMeshResource() {
     std::string fragment_shader_source = Shader::readShaderFile(
         "../src/shaders/fragment_shader_uniform.shader");
 
-    std::array<unsigned int, MeshType::size_b_dm> index_buffer =
+    std::array<unsigned int, Triangle::size_b_dm> index_buffer =
         {0, 1, 2};
 
-    std::array<float, MeshType::size_v_dm> verts =
+    std::array<float, Triangle::size_v_dm> verts =
         {-0.5f, -0.433f,
           0.0f,  0.433f,
           0.5f, -0.433f};

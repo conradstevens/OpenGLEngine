@@ -12,14 +12,24 @@
 class Square : public Entity {
 public:
     /**
+    * Size of the entities mesh vertices
+    */
+    static constexpr size_t size_v_dm = 8;
+
+    /**
+    * Size of the entities Buffer list
+    */
+    static constexpr size_t size_b_dm = 6;
+
+    /**
     * @brief Mesh type defining the mesh size the Square Entity.
     */
-    using MeshType = Mesh<8, 6>;
+    using MeshType = Mesh<size_v_dm, size_b_dm>;
 
     /**
     * @brief Entity resource type defining the size of the resource type.
     */
-    using ResourceType = EntityResource<MeshType::size_v_dm, MeshType::size_b_dm, Square>;  // TODO simplify Template
+    using ResourceType = EntityResource<Square>;  // TODO simplify Template
 
     /**
     * @brief Pointer to the entities mesh.

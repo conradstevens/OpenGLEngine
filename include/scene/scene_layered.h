@@ -14,6 +14,9 @@
 
 using namespace glfw_rendering;
 
+/**
+* @brief Scene where entities are batch rendered on Entity type at a time.
+*/
 template <EntityDerived... EntityTypes>
 class SceneLayered : public Scene<EntityTypes...> {
     /**

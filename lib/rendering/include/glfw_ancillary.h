@@ -1,24 +1,42 @@
 //
 // Created by Conrad Stevens  on 2025-03-04.
 //
-
 #ifndef GLFWANCILIARY_H
 #define GLFWANCILIARY_H
 // #define GL_SILENCE_DEPRECATION
+#include <iostream>
+
 #include <OpenGL/gl3.h>
 #include "GLFW/glfw3.h"  //  gl3 must be included before to prevent GLFW from including gl.h
 
-#include <iostream>
-
-
+/**
+* @brief GLFW Rendering functions
+*/
 namespace glfw_rendering {
+    /**
+    * @brief Set the callbacks of a GLFW window.
+    */
     void setCallBacks(GLFWwindow* window);
 
+    /**
+    * @brief Clear create GLFW.
+    */
     inline void glClearError();
+
+    /**
+    * @brief Check GLFW for errors.
+    */
     inline void glCheckError();
 
+    /**
+    * @brief Load mesh and vertex buffer to GPU.
+    */
     template<typename MeshType>
     void bindMeshToGPU(MeshType& mesh);
+
+    /**
+    * @brief create a GLFW window.
+    */
     GLFWwindow* initWindow();
 }
 
