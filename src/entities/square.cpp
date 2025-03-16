@@ -30,9 +30,12 @@ Square::ResourceType Square::loadMeshResource() {
 
     b2Polygon polygon = b2MakeSquare(0.5f);
 
+    std::array<float, 4> color{1.0, 0.0, 1.0, 1.0};
+
     ResourceType resource{std::move(shader),
         std::move(index_buffer),
         std::move(verts),
+        std::move(color),
         polygon};
 
     return std::move(resource);

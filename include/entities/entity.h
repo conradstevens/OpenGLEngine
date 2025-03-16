@@ -1,7 +1,6 @@
 //
 // Created by Conrad Stevens  on 2025-03-03.
 //
-
 #ifndef ENTITY_H
 #define ENTITY_H
 #include <array>
@@ -11,7 +10,6 @@
 #include "pose.h"
 #include "shader.h"
 #include "physics/world.h"
-
 
 /**
 * @brief Entity in the scene. Has data members associated with physical properties and rendering properties.
@@ -53,12 +51,12 @@ public:
     *
     * @note Many of the resources are shared among Entities of the same type.
     */
-    Entity(Shader &shader_, World& world_, float x_, float y_, b2Polygon polygon_, float density_, float friction_,
+    Entity(Shader &shader_, World& world_, float x_, float y_, b2Polygon* polygon_ptr_, float density_, float friction_,
             std::array<float, 4> color_) :
         static_shader_ptr(&shader_),
         world_ptr(&world_),
         color(color_),
-        body(DynamicBody{world_.worldId, x_, y_, polygon_, density_, friction_})  // TODO make body in entity derived type and pass to entity here
+        body(DynamicBody{world_.worldId, x_, y_, polygon_ptr_, density_, friction_})  // TODO make body in entity derived type and pass to entity here
         {}
 
     /**

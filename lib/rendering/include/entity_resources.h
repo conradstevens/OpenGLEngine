@@ -1,12 +1,12 @@
 //
 // Created by Conrad Stevens  on 2025-03-03.
 //
-
 #ifndef MESH_RESOURCES_H
 #define MESH_RESOURCES_H
+#include <array>
+
 #include <OpenGL/gl3.h>
 #include "box2d/box2d.h"
-#include <array>
 
 #include "shader.h"
 #include "mesh_forward.h"
@@ -18,6 +18,7 @@ struct EntityResource {
     std::array<float, size_v> vert{};
     Mesh<size_v, size_b> mesh{};
     Shader shader{};
+    std::array<float, 4> color{};
     b2Polygon polygon{};
 
     EntityResource() = default;
@@ -26,6 +27,7 @@ struct EntityResource {
     EntityResource(const Shader& shader_,
                  const std::array<unsigned int, size_b>& index_buffer_,
                  const std::array<float, size_v>& vert_,
+                 const std::array<float, 4>& color_,
                  b2Polygon& polygon_);
 
     EntityResource(const EntityResource<size_v, size_b, Entity_T>& other);
@@ -37,12 +39,14 @@ struct EntityResource {
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
 EntityResource<size_v, size_b, Entity_T>::EntityResource(const Shader &shader_,
-const std::array<unsigned int, size_b> &index_buffer_, const std::array<float, size_v> &vert_, b2Polygon& polygon_) :
+    const std::array<unsigned int, size_b> &index_buffer_, const std::array<float, size_v> &vert_,
+    const std::array<float, 4>& color_, b2Polygon& polygon_) :
     shader(shader_),
     index_buffer(index_buffer_),
     vert(vert_),
     mesh(Mesh<size_v, size_b>{&vert, &index_buffer}),
-    polygon(polygon_){
+    polygon(polygon_),
+    color(color_){
     }
 
 template<GLsizei size_v, size_t size_b, typename Entity_T>
@@ -51,6 +55,7 @@ EntityResource<size_v, size_b, Entity_T>::EntityResource(const EntityResource<si
     index_buffer(other.index_buffer),
     vert(other.vert),
     mesh(other.mesh),
+    color(other.color),
     polygon(other.polygon){
     mesh.vert_ptr = &vert;
     mesh.index_buffer_ptr = &index_buffer;
@@ -63,6 +68,7 @@ EntityResource<size_v, size_b, Entity_T>& EntityResource<size_v, size_b, Entity_
     index_buffer = other.index_buffer;
     vert = other.vert;
     mesh = other.mesh;
+    color = other.color;
     polygon = other.polygon;
     mesh.vert_ptr = &vert;
     mesh.index_buffer_ptr = &index_buffer;
@@ -75,6 +81,7 @@ EntityResource<size_v, size_b, Entity_T>::EntityResource(EntityResource<size_v, 
     vert(std::move(other.vert)),
     mesh(std::move(other.mesh)),
     shader(std::move(other.shader)),
+    color(std::move(other.color)),
     polygon(std::move(other.polygon)){
     mesh.vert_ptr = &vert;
     mesh.index_buffer_ptr = &index_buffer;
@@ -91,6 +98,7 @@ EntityResource<size_v, size_b, Entity_T> & EntityResource<size_v, size_b, Entity
         mesh = std::move(other.mesh);
         shader = std::move(other.shader);
         polygon = std::move(other.polygon);
+        color = std::move(other.color);
         mesh.vert_ptr = &vert;
         mesh.index_buffer_ptr = &index_buffer;
 

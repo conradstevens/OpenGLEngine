@@ -1,17 +1,12 @@
 //
 // Created by Conrad Stevens  on 2025-03-04.
 //
-
 #ifndef SCENE_LAYERED_H
 #define SCENE_LAYERED_H
 #include <unordered_map>
 #include <forward_list>
-#include <typeindex>
-#include <typeinfo>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "scene_abstract.h"
 #include "entities/entity.h"
@@ -21,27 +16,52 @@ using namespace glfw_rendering;
 
 template <EntityDerived... EntityTypes>
 class SceneLayered : public Scene<EntityTypes...> {
-    float zoom = 0.1f;
-    std::tuple<std::forward_list<EntityTypes>...> entities;
+    /**
+    * @brief A tuple of Forward lists. Each Forward lists containing a collection of entities.
+    *
+    * A tuple Forward list is chosen to allow batch rendering and to avoid slicing issues or runtime type inference.
+    */
+    std::tuple<std::forward_list<EntityTypes>...> entity_fw_lists;
 
 public:
-
+    /**
+    * @brief Calls abstract constructor.
+    */
     SceneLayered(World* world_ptr_);
 
+    /**
+    * @brief Default destructor each data member has its own appropriate destructor.
+    */
     ~SceneLayered() override {};
 
+    /**
+    * @brief Spawn an entity in the scene
+    */
     template<EntityDerived Entity_T>
     Entity_T& spawnEntity(float x_, float y_);
 
+    /**
+    * @brief remove an entity from the scene.
+    *
+    * @param entity must be a reference to an object in `scene.entities`
+    */
     template<EntityDerived Entity_T>
     void removeEntity(Entity_T& entity);
 
     void render() override;
 
 private:
+    /**
+    * @brief Return the privately entities.
+    *
+    * A getter is used in the event that entities is shared among inheritance structures.
+    */
     template<EntityDerived Entity_T>
     std::forward_list<Entity_T>& getEntityFwList();
 
+    /**
+    *@brief Render all the entities in a forward list containing a specific entity type.
+    */
     template<EntityDerived Entity_T>
     void renderEntityFwList();
 };
@@ -74,7 +94,7 @@ void SceneLayered<EntityTypes...>::render() {
 template<EntityDerived ... EntityTypes>
 template<EntityDerived Entity_T>
 std::forward_list<Entity_T>& SceneLayered<EntityTypes...>::getEntityFwList() {
-    return std::get<std::forward_list<Entity_T>>(entities);
+    return std::get<std::forward_list<Entity_T>>(entity_fw_lists);
 }
 
 template<EntityDerived ... EntityTypes>
@@ -90,7 +110,7 @@ void SceneLayered<EntityTypes...>::renderEntityFwList() {
     bindMeshToGPU(shared_entity_mesh);
     std::array<float, 4> shared_entity_color = entity_fw_list.front().getColor();
 
-    shared_entity_shader.set_zoom(zoom);  // TODO Load index buffer and mesh seperately
+    shared_entity_shader.set_zoom(this->zoom);
 
     for (Entity_T& entity : entity_fw_list) {
         shared_entity_shader.set_color(shared_entity_color);

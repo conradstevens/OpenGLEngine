@@ -1,7 +1,6 @@
 //
 // Created by Conrad Stevens  on 2025-03-03.
 //
-
 #ifndef SQUARE_H
 #define SQUARE_H
 #include "entity.h"
@@ -47,8 +46,7 @@ public:
     * @brief Constructor setting all relevant data members.
     */
     explicit Square(ResourceType& resource, World& world_, float x_, float y_) :
-        Entity(resource.shader, world_, x_, y_, resource.polygon, density, friction,
-            std::array<float, 4>{1.0, 0.0, 1.0, 1.0}),
+        Entity(resource.shader, world_, x_, y_, &resource.polygon, density, friction, resource.color),
         static_mesh_ptr(&resource.mesh)
         {}
 

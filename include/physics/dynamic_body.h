@@ -10,33 +10,33 @@
 */
 class DynamicBody {
 public:
-
     /**
     * Box2d body Id.
     */
     b2BodyId bodyId{};
 
     /**
-    * Box2d Polygon determining the shape of the object.  TODO see if can be shared
+    * Box2d Polygon pointer determining the shape of the object.
     */
-    b2Polygon polygon{};
+    b2Polygon* polygon_ptr{};
 
     /**
-    * Box2d shape definer.  TODO see if can be shared
-    */
-    b2ShapeDef shapeDef{};
-
-    /**
-    * Box2d world Id the object belongs to.  TODO see if can be shared
+    * Box2d world Id the object belongs to.
     */
     b2WorldId worldId{};
-    float posX{0.0f};
-    float posY{0.0f};
+
+    /**
+    * The Box2d density of the body
+    */
     float density{1.0f};
+
+    /**
+    * The Box2d friction of the body
+    */
     float friction{0.3f};
 
     DynamicBody() = default;
-    DynamicBody(b2WorldId worldID, float x_, float y_, const b2Polygon& polygon_, float density_, float friction_);
+    DynamicBody(b2WorldId worldID, float x_, float y_, b2Polygon* polygon_ptr_, float density_, float friction_);
     ~DynamicBody();
 
     DynamicBody(const DynamicBody& other);
@@ -46,7 +46,7 @@ public:
     DynamicBody& operator=(DynamicBody&& other) noexcept;
 
 private:
-    void createBody();
+    void createBody(float x_, float y_);
 };
 
 #endif //DYNAMICBODY_H

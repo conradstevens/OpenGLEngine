@@ -29,10 +29,14 @@ Triangle::ResourceType Triangle::loadMeshResource() {
     b2Hull hull = b2ComputeHull(points, verts.size() / 2);
     b2Polygon polygon = b2MakePolygon(&hull, 0.0);
 
+    std::array<float, 4> color{0.0, 1.0, 1.0, 1.0};
+
     ResourceType resource{std::move(shader),
         std::move(index_buffer),
         std::move(verts),
+        std::move(color),
         polygon};
+
 
     return std::move(resource);
 }
