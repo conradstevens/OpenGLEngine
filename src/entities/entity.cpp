@@ -7,26 +7,30 @@
 
 Entity::Entity(const Entity& other) :
     body(other.body),
-    static_shader_ptr(other.static_shader_ptr){
+    static_shader_ptr(other.static_shader_ptr),
+    color(other.color){
 }
 
 Entity &Entity::operator=(const Entity& other) {
     if (this != &other) {
         body = other.body;
         static_shader_ptr = other.static_shader_ptr;
+        color = other.color;
     }
     return *this;
 }
 
 Entity::Entity(Entity &&other) noexcept :
     body(std::move(other.body)),
-    static_shader_ptr(other.static_shader_ptr){
+    static_shader_ptr(other.static_shader_ptr),
+    color(std::move(other.color)){
 }
 
 Entity &Entity::operator=(Entity &&other) noexcept {
     if (this != &other) {
         body = std::move(other.body);
         static_shader_ptr = other.static_shader_ptr;
+        color = std::move(other.color);
     }
     return *this;
 }

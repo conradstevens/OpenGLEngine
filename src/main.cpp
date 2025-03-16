@@ -15,7 +15,10 @@
 
 using namespace glfw_rendering;
 
-
+/**
+ * @brief Creates a physics world with gravity and walls, adds it to a rendering scene, then rains down triangles and
+ * squares. The thread frame is at 180fps which is faster than most monitors.
+ */
 int main() {
     GLFWwindow* window = initWindow();
 

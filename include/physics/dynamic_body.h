@@ -5,11 +5,30 @@
 #define DYNAMICBODY_H
 #include "box2d/box2d.h"
 
+/**
+* @brief Dynamic body, wrapping the Box2d body struct
+*/
 class DynamicBody {
 public:
+
+    /**
+    * Box2d body Id.
+    */
     b2BodyId bodyId{};
+
+    /**
+    * Box2d Polygon determining the shape of the object.  TODO see if can be shared
+    */
     b2Polygon polygon{};
+
+    /**
+    * Box2d shape definer.  TODO see if can be shared
+    */
     b2ShapeDef shapeDef{};
+
+    /**
+    * Box2d world Id the object belongs to.  TODO see if can be shared
+    */
     b2WorldId worldId{};
     float posX{0.0f};
     float posY{0.0f};

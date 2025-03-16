@@ -11,9 +11,9 @@
 Square::ResourceType Square::loadMeshResource() {
 
     std::string vertex_shader_source = Shader::readShaderFile(
-        "../src/shaders/vertex_shader_translation_uniform.shader");
+        "shaders/vertex_shader_translation_uniform.shader");
     std::string fragment_shader_source = Shader::readShaderFile(
-        "../src/shaders/fragment_shader_uniform.shader");
+        "shaders/fragment_shader_uniform.shader");
 
     std::array<unsigned int, MeshType::size_b_dm> index_buffer =
         {0, 1, 2,

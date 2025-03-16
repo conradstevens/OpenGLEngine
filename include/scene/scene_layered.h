@@ -90,7 +90,7 @@ void SceneLayered<EntityTypes...>::renderEntityFwList() {
     bindMeshToGPU(shared_entity_mesh);
     std::array<float, 4> shared_entity_color = entity_fw_list.front().getColor();
 
-    shared_entity_shader.set_zoom(zoom);
+    shared_entity_shader.set_zoom(zoom);  // TODO Load index buffer and mesh seperately
 
     for (Entity_T& entity : entity_fw_list) {
         shared_entity_shader.set_color(shared_entity_color);

@@ -14,7 +14,7 @@ include_directories(external/glm)
 include_directories(external/box2d/include)
 add_subdirectory(external/box2d)
 
-# Local
+# Local Libraries
 add_subdirectory(lib/rendering)
 add_subdirectory(testing)
 
@@ -33,6 +33,5 @@ target_link_libraries(${PROJECT_NAME}
             Rendering
         # External
             box2d
-            glfw
-            "-framework OpenGL"
+            glfw "-framework OpenGL"
 )

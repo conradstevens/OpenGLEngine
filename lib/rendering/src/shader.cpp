@@ -87,10 +87,21 @@ void Shader::set_zoom(float zoom) {
 }
 
 std::string Shader::readShaderFile(const std::string& path) {
-    std::ifstream file(path);
+    std::ifstream file;
+    std::string search_path;
+    std::array<std::string, 12> prefixes =
+        {"", "../", "src/", "../src/", "../../src/", "../../../src/"};
+    for (std::string prefix : prefixes) {
+        search_path = prefix + path;
+        // std::cout << "search_path: " << search_path << std::endl;
+        file = std::ifstream{search_path};
+        if (file.is_open()) break;
+    }
 
     if (!file.is_open()) {
-        std::cout << "\033[31mFailed to open file: \033[0m" << "\033[31m" << path << "\033[0m" << std::endl;
+        std::filesystem::path currentDir = std::filesystem::current_path();
+        std::cout << "\033[31mFailed to open file: \033[0m" << "\033[31m" <<
+            currentDir.string() + path << "\033[0m" << std::endl;
         return "";
     }
 
