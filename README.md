@@ -11,15 +11,23 @@ All the dependencies are linked dynamically using the origianl repos submodulos.
 Building the project should be failry streight forwards as all dependencies are dynamically linked via their submodulo. Further, OpenGL for the most part is cross platform. 
 
 Clone project and submodulos.
+
 `git clone --recurse-submodules https://github.com/conradstevens/OpenGLEngine.git`
 
 Enter repository
+
 `cd OpenGLEngine`
 
-Build Project, this may take a while
+
+Build Project.
+
 `mkdir build`
+
 `cmake -S . -B build` May take a minute
+
 `cmake --build build` This may take a while
 
+
 Run the program!
-`./build/OpenGLEngine
+
+`./build/OpenGLEngine`
