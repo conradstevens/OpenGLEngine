@@ -1,11 +1,11 @@
-// //
-// // Created by Conrad Stevens  on 2025-03-03.
-// //
+//
+// Created by Conrad Stevens  on 2025-03-03.
+//
 #include <iostream>
 #include <thread>
 #include <future>
+#include <iomanip>
 #include <random>
-
 
 #include "entities/square.h"
 #include "entities/triangle.h"
@@ -38,6 +38,7 @@ int main() {
         std::future<void> async_timer =
             std::async([]() {std::this_thread::sleep_for(std::chrono::duration<double>(1.0/60.0/3));});
 
+        auto start = std::chrono::high_resolution_clock::now();
         {  // Event loop
             if (frameCount % 30 == 0) {
                 float x_spawn = -9.0f + (std::rand() / (RAND_MAX / 18.0f));
@@ -54,6 +55,14 @@ int main() {
             }
             scene.world_ptr->step();
             scene.render();
+
+            if (frameCount % 60 == 0) {
+                auto end = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double, std::milli> duration = end - start;
+                std::cout << "\r";
+                std::cout << "FPS: " << std::fixed << std::setprecision(1) << 1000 / duration.count();
+                std::cout.flush();
+            }
         }
 
         async_timer.get();
